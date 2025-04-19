@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 6
+  },
+    kyc_status: {
+    type: String,
+    enum: ['completed', 'failed', 'pending'],
+    default: 'pending'
   }
 }, { timestamps: true });
 

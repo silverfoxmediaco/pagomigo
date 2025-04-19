@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dashboard - Pagomigo</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo"><a href="home.html"><img src="pagomigologo.png" id="logo" alt="pagomigologo"></a>
+        </div>
+        <img src="menuicon.svg" alt="Menu" class="hamburger" id="hamburger" />
+      </header>
+    
+      <nav class="slideout-menu" id="slideoutMenu">
+        <img src="closeicon.svg" alt="Close" class="close-btn" id="closeMenu" />
+        <ul>
+          <li><a href="home.html">Home</a></li>
+          <li><a href="moneymover.html">Send/Request Money</a></li>
+          <li><a href="#">Settings</a></li>
+          <li><a href="#">Logout</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+        </ul>
+      </nav>
+  </header>
+
+  <main class="dashboard">
+    <section class="user-info">
+      <h2>Welcome, <span id="user-name">User</span></h2>
+      <p>Email: <span id="user-email">email@example.com</span></p>
+      <p>KYC Status: <span id="user-kyc">pending</span></p>
+    </section>
+
+    <section class="transactions">
+      <h3>Recent Transactions</h3>
+      <ul id="transaction-list">
+        <!-- Populated by JS -->
+      </ul>
+    </section>
+  
+
+    <section class="requests">
+      <h3>Incoming Requests</h3>
+      <ul id="request-list">
+        <!-- Populated by JS -->
+      </ul>
+    </section>
+  </main>
+  
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

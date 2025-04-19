@@ -3,12 +3,31 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const authRoutes = require('./routes/authRoutes');
+const kycRoutes = require('./routes/kycRoutes');
+const userRoutes = require('./routes/userRoutes');
+const transactionRoutes = require('./routes/transactionRoutes');
+const requestRoutes = require('./routes/requestRoutes');
+
+
+
+
+
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+
+//Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/kyc', kycRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/transactions', requestRoutes);
+
 
 // Basic test route
 app.get('/api/ping', (req, res) => {
