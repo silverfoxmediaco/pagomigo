@@ -44,7 +44,7 @@ async function loadDashboard() {
       txList.appendChild(li);
     });
 
-    const reqRes = await fetch('/api/transactions/requests', {
+    const reqRes = await fetch('/api/requests', {
       headers: { Authorization: `Bearer ${token}` }
     });
     const requests = await reqRes.json();
@@ -61,7 +61,7 @@ async function loadDashboard() {
         approveBtn.classList.add('approve-btn');
         approveBtn.addEventListener('click', () => approveRequest(req._id));
         li.appendChild(approveBtn);
-      
+
         const declineBtn = document.createElement('button');
         declineBtn.textContent = 'Decline';
         declineBtn.classList.add('decline-btn');
@@ -80,7 +80,7 @@ async function loadDashboard() {
 async function approveRequest(requestId) {
   try {
     const token = localStorage.getItem('token');
-    const res = await fetch(`/api/transactions/request/${requestId}/approve`, {
+    const res = await fetch(`/api/requests/${requestId}/approve`, {
       method: 'PUT',
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -97,7 +97,7 @@ async function approveRequest(requestId) {
 async function declineRequest(requestId) {
   try {
     const token = localStorage.getItem('token');
-    const res = await fetch(`/api/transactions/request/${requestId}/decline`, {
+    const res = await fetch(`/api/requests/${requestId}/decline`, {
       method: 'PUT',
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -110,11 +110,10 @@ async function declineRequest(requestId) {
     alert('Failed to decline request');
   }
 }
+
 // Load dashboard data on page load
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', loadDashboard);
 } else {
   loadDashboard();
 }
-
-document.addEventListener('DOMContentLoaded', loadDashboard);
