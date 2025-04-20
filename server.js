@@ -9,11 +9,6 @@ const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const requestRoutes = require('./routes/requestRoutes');
 
-
-
-
-
-
 const app = express();
 
 // Middleware
