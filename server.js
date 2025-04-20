@@ -21,7 +21,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/kyc', kycRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/transactions', transactionRoutes);
-app.use('/api/transactions', requestRoutes);
+app.use('/api/requests', requestRoutes);
+
 
 
 // Basic test route
