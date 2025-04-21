@@ -93,29 +93,29 @@ body {
     margin: 0 auto 3rem auto;
   }
 
-  .send-cta-button {
-    background-color: #00cc66;
-    color: white;
-    padding: 1.5rem 1.5rem;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 20px;
-    border-radius: 6px;
-    margin-left: 5px;
-    transition: background-color 0.3s;
-  }
+  .cta-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 1rem auto;
+}
 
-  .request-cta-button {
-    background-color: #00cc66;
-    color: white;
-    padding: 1.5rem 1.5rem;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 20px;
-    border-radius: 6px;
-    margin-left: 5px;
-    transition: background-color 0.3s;
-  }
+.send-cta-button,
+.request-cta-button {
+  background-color: #00cc66;
+  color: white;
+  padding: 1rem 1.5rem;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 18px;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+  text-align: center;
+  flex: 1 1 200px;
+  max-width: 300px;
+}
+
 
   .cta-button:hover {
     background-color: #00994d;
@@ -204,20 +204,14 @@ body {
         cursor: pointer;
       }
 
-      .cta-button {
-        background-color: #00cc66;
-        color: white;
-        padding: .7rem 1.5rem;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 15px;
-        border-radius: 6px;
-        margin-left: 5px;
-        transition: background-color 0.3s;
-      }
-
-      /* Responsive adjustments */
-  @media (max-width: 768px) {
+      /* Responsive tweaks */
+@media (max-width: 768px) {
+  .send-cta-button,
+  .request-cta-button {
+    width: 100%;
+    font-size: 16px;
+    padding: 0.75rem 1rem;
+  }
 
     .footer-grid {
         grid-template-columns: 1fr;
