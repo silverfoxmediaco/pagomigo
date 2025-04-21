@@ -10,29 +10,6 @@ h2 {
   color: #2A2D34;
 }
 
-.cta-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin: 1rem auto;
-}
-
-.send-cta-button,
-.request-cta-button {
-  background-color: #00cc66;
-  color: white;
-  padding: 1rem 1.5rem;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 18px;
-  border-radius: 6px;
-  transition: background-color 0.3s;
-  text-align: center;
-  flex: 1 1 200px;
-  max-width: 300px;
-}
-
 /* Debit Card Section Styles */
 .debit-card-section {
     margin: 4rem 0;
@@ -89,8 +66,12 @@ h2 {
   }
   
   .debit-card-image img {
-    max-width: 100%;
+    width: 100%;
     height: auto;
+  }
+
+  .visa {
+    width: 60%;
   }
 
  /* Footer Styles */
@@ -169,6 +150,19 @@ h2 {
   
     .debit-card-text h2 {
       font-size: 30px;
+      text-align: center;
+    }
+
+    p {
+      text-align: center;
+    }
+
+    h3 {
+      text-align: center;
+    }
+
+    .visa {
+      width: 100%;
     }
 
     .footer-grid {
