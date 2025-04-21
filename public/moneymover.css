@@ -173,4 +173,21 @@ body {
     margin: 0;
     font-size: 0.95rem;
   }
+
+/* Responsive adjustments */
+  @media (max-width: 768px) {
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    
+      .footer-links {
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+      }
+
+  }
+
   
