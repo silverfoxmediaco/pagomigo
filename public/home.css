@@ -71,8 +71,11 @@ h2 {
   }
 
   .visa {
-    width: 60%;
-  }
+      display: block;
+      margin: 0 auto;
+      width: 80%;
+      height: auto;
+    }
 
  /* Footer Styles */
 .site-footer {
