@@ -94,12 +94,17 @@ body {
   }
 
   .cta-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin: 1rem auto;
-}
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+    margin: 1rem auto;
+    max-width: 600px;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    
+  }
 
 .send-cta-button,
 .request-cta-button {
@@ -204,15 +209,17 @@ body {
         cursor: pointer;
       }
 
-      /* Responsive tweaks */
-@media (max-width: 768px) {
-
     .cta-buttons {
-        display: grid;
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: row;
         gap: 10px;
         justify-content: center;
         margin: 1rem auto;
+        max-width: 600px;
+        width: 100%;
+        flex-wrap: wrap;
+        align-items: center;
+        
       }
     
   .send-cta-button,
@@ -234,5 +241,3 @@ body {
       }
 
   }
-
-}
