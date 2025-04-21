@@ -17,12 +17,15 @@ if (closeBtn) {
   });
 }
 
+// Use your custom domain as the API base
+const API_BASE = 'https://pagomigo.com';
+
 // Fetch user profile, transactions, and incoming requests
 async function loadDashboard() {
   try {
     const token = localStorage.getItem('token');
 
-    const profileRes = await fetch('/api/user/profile', {
+    const profileRes = await fetch(`${API_BASE}/api/user/profile`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const profile = await profileRes.json();
@@ -31,7 +34,7 @@ async function loadDashboard() {
     document.getElementById('user-email').textContent = profile.email;
     document.getElementById('user-kyc').textContent = profile.kyc_status;
 
-    const txRes = await fetch('/api/transactions/history', {
+    const txRes = await fetch(`${API_BASE}/api/transactions/history`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const transactions = await txRes.json();
@@ -44,7 +47,7 @@ async function loadDashboard() {
       txList.appendChild(li);
     });
 
-    const reqRes = await fetch('/api/requests', {
+    const reqRes = await fetch(`${API_BASE}/api/requests`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const requests = await reqRes.json();
@@ -67,7 +70,7 @@ async function loadDashboard() {
         declineBtn.classList.add('decline-btn');
         declineBtn.addEventListener('click', () => declineRequest(req._id));
         li.appendChild(declineBtn);
-      }      
+      }
 
       reqList.appendChild(li);
     });
@@ -80,7 +83,7 @@ async function loadDashboard() {
 async function approveRequest(requestId) {
   try {
     const token = localStorage.getItem('token');
-    const res = await fetch(`/api/requests/${requestId}/approve`, {
+    const res = await fetch(`${API_BASE}/api/requests/${requestId}/approve`, {
       method: 'PUT',
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -97,7 +100,7 @@ async function approveRequest(requestId) {
 async function declineRequest(requestId) {
   try {
     const token = localStorage.getItem('token');
-    const res = await fetch(`/api/requests/${requestId}/decline`, {
+    const res = await fetch(`${API_BASE}/api/requests/${requestId}/decline`, {
       method: 'PUT',
       headers: { Authorization: `Bearer ${token}` }
     });
