@@ -206,6 +206,15 @@ body {
 
       /* Responsive tweaks */
 @media (max-width: 768px) {
+
+    .cta-buttons {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        justify-content: center;
+        margin: 1rem auto;
+      }
+    
   .send-cta-button,
   .request-cta-button {
     width: 100%;
