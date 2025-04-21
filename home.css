@@ -25,7 +25,8 @@ h2 {
   .debit-card-text {
     background-color: #0033cc;
     color: white;
-    padding: 50px;
+    padding-left: 40px;
+    padding-right: 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -67,6 +68,13 @@ h2 {
   
   .debit-card-image img {
     max-width: 100%;
+    height: auto;
+  }
+
+  .visa {
+    display: block;
+    margin: 0 auto;
+    width: 50%;
     height: auto;
   }
 
@@ -146,6 +154,13 @@ h2 {
   
     .debit-card-text h2 {
       font-size: 30px;
+    }
+
+    .visa {
+      display: block;
+      margin: 0 auto;
+      width: 80%;
+      height: auto;
     }
 
     .footer-grid {
