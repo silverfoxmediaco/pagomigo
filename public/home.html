@@ -35,6 +35,10 @@
       <div class="cta-buttons">
       <a href="moneymover.html" class="send-cta-button">Send Payment</a>
       <a href="moneymover.html" class="request-cta-button">Request Payment</a>
+    </div>
+      <div>
+        <h3>Join now to start sending and receiving Money.</h3>
+        <button class="signupbtn">Join Now</button>
       </div>
     </div>
   </main>
@@ -65,7 +69,7 @@
   
       <!-- Right column: image placeholder -->
       <div class="debit-card-image">
-        <img src="bonitasenoritaphone.png" alt="Pagomigo Debit Card Mockup" />
+        <img src="bonitasenoritaphone.png" alt="Bonita senorita using her phone" />
       </div>
     </div>
   </section>
@@ -85,6 +89,24 @@
     <div class="footer-row footer-copy">
       <p>&copy; 2025 Pagomigo.com L.L.C. All rights reserved.</p>
     </div>
+
+        <!-- Sign Up Modal -->
+    <div id="signup-modal" class="modal-overlay">
+      <div class="modal-content">
+        <span class="modal-close" id="close-signup">&times;</span>
+        <h2>Create Your Pagomigo Account</h2>
+        <form id="signup-form">
+          <input type="text" id="name" placeholder="Full Name" required />
+          <input type="text" id="username" placeholder="Username" required />
+          <input type="email" id="email" placeholder="Email Address" required />
+          <input type="password" id="password" placeholder="Password" required />
+          <button type="submit" class="cta-button">Submit</button>
+        </form>
+        <p id="signup-message"></p>
+      </div>
+    </div>
+
+
   </footer>
 </body>
 </html>
