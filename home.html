@@ -11,7 +11,7 @@
 </head>
 <body>
   <header class="main-header">
-    <div class="logo"><a href="home.html"><img src="/pagomigologo.png" id="logo" alt="pagomigologo"></a>
+    <div class="logo"><a href="home.html"><img src="pagomigologo.png" id="logo" alt="pagomigologo"></a>
     </div>
     <img src="menuicon.svg" alt="Menu" class="hamburger" id="hamburger" />
   </header>
@@ -32,8 +32,14 @@
     <div class="hero-text">
       <h1>Empowering Connections. One Payment at a Time.</h1>
       <p>Pagomigo is a digital wallet designed for the Hispanic and Latino communities across the United States. We provide a secure and easy-to-use payment platform that empowers users to send money to friends and family with confidence, convenience, and cultural connection.</p>
+      <div class="cta-buttons">
       <a href="moneymover.html" class="send-cta-button">Send Payment</a>
       <a href="moneymover.html" class="request-cta-button">Request Payment</a>
+    </div>
+      <div>
+        <h3>Join now to start sending and receiving Money.</h3>
+        <button class="signupbtn">Join Now</button>
+      </div>
     </div>
   </main>
 
@@ -42,13 +48,13 @@
       <!-- Left column: text -->
       <div class="debit-card-text">
         <h2>Use Your Pagomigo Debit Card Anywhere</h2>
+        <img src="pagomigovisacard.png" alt="pgomigo visa root" class="visa" />
         <p>Shop online or in-store, pay bills, and access your money instantly with your Pagomigo debit card. Your card is accepted wherever Mastercard or Visa is accepted.</p>
   
         <div class="features-list">
           <div class="feature-item">
             <h3>Instant Access</h3>
             <p>Use your card to make purchases or withdraw cash from ATMs across the U.S.</p>
-            <img src="pagomigovisacard.png" alt="pgomigo visa root" class="visa" />
           </div>
           <div class="feature-item">
             <h3>Touchless Payments</h3>
@@ -63,7 +69,7 @@
   
       <!-- Right column: image placeholder -->
       <div class="debit-card-image">
-        <img src="bonitasenoritaphone.png" alt="Pagomigo Debit Card Mockup" />
+        <img src="bonitasenoritaphone.png" alt="Bonita senorita using her phone" />
       </div>
     </div>
   </section>
@@ -72,7 +78,7 @@
   <script src="home.js"></script>
   <footer class="site-footer">
     <div class="footer-row footer-logo">
-      <img src="pagomigologo.png" alt="/Pagomigo Logo" width="100" />
+      <img src="pagomigologo.png" alt="Pagomigo Logo" width="100" />
     </div>
   
     <div class="footer-row footer-links">
@@ -83,6 +89,24 @@
     <div class="footer-row footer-copy">
       <p>&copy; 2025 Pagomigo.com L.L.C. All rights reserved.</p>
     </div>
+
+        <!-- Sign Up Modal -->
+    <div id="signup-modal" class="modal-overlay">
+      <div class="modal-content">
+        <span class="modal-close" id="close-signup">&times;</span>
+        <h2>Create Your Pagomigo Account</h2>
+        <form id="signup-form">
+          <input type="text" id="name" placeholder="Full Name" required />
+          <input type="text" id="username" placeholder="Username" required />
+          <input type="email" id="email" placeholder="Email Address" required />
+          <input type="password" id="password" placeholder="Password" required />
+          <button type="submit" class="cta-button">Submit</button>
+        </form>
+        <p id="signup-message"></p>
+      </div>
+    </div>
+
+
   </footer>
 </body>
 </html>
