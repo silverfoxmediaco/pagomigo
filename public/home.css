@@ -78,7 +78,7 @@ h2 {
     height: auto;
   }
 
-  .signupbtn {
+  #signupbtn {
     background-color: blue;
     color: white;
     padding: .7rem 1.5rem;
