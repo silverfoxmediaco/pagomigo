@@ -8,6 +8,15 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  phone: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  phone_verified: {
+    type: Boolean,
+    default: false
+  },
   email: {
     type: String,
     required: true,
