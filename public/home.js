@@ -53,8 +53,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const messageEl = document.getElementById("signup-message");
   
     if (signupForm) {
-      signupForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
+          signupForm.addEventListener("submit", async (e) => {
+              e.preventDefault();
+            
+              if (!document.getElementById("agreeTerms").checked) {
+                alert("You must agree to the Terms & Conditions and Privacy Policy.");
+                return;
+              }
+
   
         const name = document.getElementById("name").value;
         const username = document.getElementById("username").value;
