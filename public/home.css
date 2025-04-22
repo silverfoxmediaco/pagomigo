@@ -105,6 +105,9 @@ h2 {
   
   .modal-overlay.active {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
   }
   
   .modal-content {
@@ -116,6 +119,22 @@ h2 {
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     position: relative;
   }
+
+  #signup-form {
+    padding: 10px;
+  }
+
+  .cta-button {
+    background-color: #0033cc;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+  }
   
   .modal-close {
     position: absolute;
@@ -123,6 +142,11 @@ h2 {
     top: 10px;
     font-size: 1.5rem;
     cursor: pointer;
+  }
+
+  .accountinput {
+    padding: 5px;
+    margin: 5px;
   }
   
 
@@ -219,6 +243,39 @@ h2 {
 
       width: 80%;
       height: auto;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; 
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      position: relative;
+    }
+  
+    #signup-form {
+      padding: 10px;
     }
 
     .footer-grid {
