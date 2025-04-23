@@ -5,7 +5,7 @@ const requireAuth = require('../middleware/requireAuth');
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
 //const { sendEmail } = require('../utils/emailService');
-const { sendPushNotification } = require('../utils/pushNotificationService');
+const { sendPushNotification } = require('../utils/pushNotificationServices');
 const { sendTransactionNotification } = require('../utils/notificationService');
 
 // @route   POST /api/transactions/send
