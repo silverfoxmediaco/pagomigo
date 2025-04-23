@@ -32,7 +32,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['completed', 'failed', 'pending'],
     default: 'pending'
+  },
+    balance: {
+    type: Number,
+    default: 500.00 // Starting demo balance
   }
+
 }, { timestamps: true });
 
 // Hash password before saving
