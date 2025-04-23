@@ -70,16 +70,16 @@ router.post('/verify-code', async (req, res) => {
 // Register Route
 router.post('/register', async (req, res) => {
   try {
-    const { name, phone, email, password } = req.body;
-    if (!name || !phone || !email || !password) {
+    const { name, phone, username, password } = req.body;
+    if (!name || !phone || !username || !password) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
     // Check if user exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ $or: [{ phone }, { username }] });
     if (existingUser) return res.status(400).json({ message: 'User already exists' });
 
-    const user = new User({ name, phone, email, password });
+    const user = new User({ name, phone, username, password });
     await user.save();
 
     const token = generateToken(user._id);
@@ -92,9 +92,9 @@ router.post('/register', async (req, res) => {
 // Login Route
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { phone, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ phone });
     if (!user) return res.status(400).json({ message: 'Invalid credentials' });
 
     const isMatch = await user.comparePassword(password);
