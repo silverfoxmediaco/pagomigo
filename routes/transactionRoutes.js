@@ -58,7 +58,7 @@ router.post('/send', requireAuth, async (req, res) => {
     await transaction.save();
     // Send email notification to sender
     const emailSubject = 'Transaction Successful';
-    const emailBody = `You have successfully sent $${amount} to ${recipientName}.`;
+    const emailBody = `You have successfully sent $${amount} to ${recipient.name}.`;
     await sendEmail(sender.email, emailSubject, emailBody);
     // Send push notification to recipient
     const pushNotificationTitle = 'Money Received';
