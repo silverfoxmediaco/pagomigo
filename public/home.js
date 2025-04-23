@@ -64,14 +64,14 @@ document.addEventListener("DOMContentLoaded", () => {
   
         const name = document.getElementById("name").value;
         const username = document.getElementById("username").value;
-        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
         const password = document.getElementById("password").value;
   
         try {
           const res = await fetch("/api/auth/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, username, email, password })
+            body: JSON.stringify({ name, username, phone, password })
           });
   
           const data = await res.json();
