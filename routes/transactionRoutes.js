@@ -4,7 +4,7 @@ const router = express.Router();
 const requireAuth = require('../middleware/requireAuth');
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
-const { sendEmail } = require('../utils/emailService');
+//const { sendEmail } = require('../utils/emailService');
 const { sendPushNotification } = require('../utils/pushNotificationService');
 const { sendTransactionNotification } = require('../utils/notificationService');
 
