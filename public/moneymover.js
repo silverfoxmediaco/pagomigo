@@ -23,14 +23,14 @@ requestTab.addEventListener('click', () => {
   sendSection.classList.add('hidden');
 });
 
-// Send Money
+// Send Money form submit
 sendForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const token = localStorage.getItem('token');
 
   const formData = new FormData(sendForm);
   const data = {
-    recipientName: formData.get('recipientName'),
+    recipientPhone: formData.get('recipientPhone'),
     recipientCountry: formData.get('recipientCountry'),
     amountUsd: formData.get('amountUsd'),
   };
