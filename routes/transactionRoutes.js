@@ -6,7 +6,7 @@ const Transaction = require('../models/Transaction');
 const User = require('../models/User');
 //const { sendEmail } = require('../utils/emailService');
 const { sendPushNotification } = require('../utils/pushNotificationServices');
-const { sendTransactionNotification } = require('../utils/notificationService');
+const { sendTransactionNotification } = require('../utils/notificationServices');
 
 // @route   POST /api/transactions/send
 // @desc    Send money to recipient
