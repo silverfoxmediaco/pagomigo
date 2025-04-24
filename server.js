@@ -18,6 +18,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+// Middleware to catch URI errors
+app.use((req, res, next) => {
+  try {
+    decodeURIComponent(req.path);
+    next();
+  } catch (err) {
+    console.warn('Bad URI:', req.path);
+    res.status(400).send('Bad Request');
+  }
+});
+
 
 
 app.get('*', (req, res) => {
