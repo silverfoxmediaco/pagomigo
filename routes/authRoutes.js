@@ -53,7 +53,7 @@ router.post('/verify-code', async (req, res) => {
 
     if (verificationCheck.status === 'approved') {
       // Optionally update user in DB
-      await User.findOneAndUpdate({ phone }, { phone_Verified: true });
+      await User.findOneAndUpdate({ phone }, { phone_verified: true });
 
       return res.status(200).json({ message: 'Phone verified successfully' });
     } else {
@@ -85,6 +85,7 @@ router.post('/register', async (req, res) => {
     const token = generateToken(user._id);
     res.status(201).json({ message: 'User registered successfully', token });
   } catch (err) {
+      console.error("Login failed:", err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
@@ -103,6 +104,7 @@ router.post('/login', async (req, res) => {
     const token = generateToken(user._id);
     res.status(200).json({ message: 'Login successful', token });
   } catch (err) {
+      console.error("Login failed:", err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
