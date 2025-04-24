@@ -3,7 +3,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const verifyForm = document.getElementById("verifyForm");
     const messageEl = document.getElementById("verify-message");
-    const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+   // const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
   
     if (verifyForm) {
