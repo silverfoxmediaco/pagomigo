@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         messageEl.textContent = data.message || "Account created!";
 
         if (res.ok) {
+          localStorage.setItem("phone", phone);
           signupForm.reset();
           setTimeout(() => modal.classList.remove("active"), 2000);
 
