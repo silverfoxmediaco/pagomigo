@@ -53,7 +53,7 @@ router.post('/verify-code', async (req, res) => {
 
     if (verificationCheck.status === 'approved') {
       // Optionally update user in DB
-      await User.findOneAndUpdate({ phone }, { phoneVerified: true });
+      await User.findOneAndUpdate({ phone }, { phone_Verified: true });
 
       return res.status(200).json({ message: 'Phone verified successfully' });
     } else {
