@@ -9,7 +9,8 @@ const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TO
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 
-// Generate JWT\const generateToken = (userId) => {
+// Generate JWT
+  const generateToken = (userId) => {
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '7d' });
 };
 
