@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
           });
 
           // Redirect after verification request
-          window.location.href = "/login.html";
+          window.location.href = "/verify.html";
         }
       } catch (err) {
         console.error("Signup error:", err);
