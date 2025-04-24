@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     navList.innerHTML = `
       <li><a href="dashboard.html">Dashboard</a></li>
       <li><a href="moneymover.html">Send/Request Money</a></li>
-      <li><a href="home.html">Home</a></li>
+      <li><a href="/">Home</a></li>
       <li><a href="#">Settings</a></li>
       <li id="authMenuItem"><a href="login.html">Login</a></li>
     `;
