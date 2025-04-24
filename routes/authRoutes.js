@@ -9,33 +9,44 @@ const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TO
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 
-// Generate JWT
-const generateToken = (userId) => {
+// Generate JWT\const generateToken = (userId) => {
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '7d' });
 };
 
-
-//Twilio SMS verification
+// Twilio SMS verification
 router.post('/send-verification', async (req, res) => {
   const { phone } = req.body;
 
   if (!phone) return res.status(400).json({ message: 'Phone number is required' });
 
+  // Format phone number to E.164
+  const formattedPhone = phone.replace(/\D/g, '');
+  const internationalPhone = formattedPhone.startsWith('1')
+    ? `+${formattedPhone}`
+    : `+1${formattedPhone}`;
+
   try {
     const verification = await client.verify.v2
       .services(process.env.TWILIO_VERIFY_SERVICE_ID)
       .verifications.create({
-        to: phone,
+        to: internationalPhone,
         channel: 'sms'
       });
+
+    console.log("Twilio verification response:", verification);
+
+    if (verification && verification.sid) {
       res.status(200).json({ message: 'Verification code sent', sid: verification.sid });
+    } else {
+      res.status(500).json({ message: 'Failed to send verification code: Invalid response' });
+    }
   } catch (err) {
     console.error('Twilio verification error:', err.message);
-    res.status(500).json({ message: 'Failed to send verification code' });
+    res.status(500).json({ message: 'Failed to send verification code', error: err.message });
   }
 });
 
-  // Confirm SMS code
+// Confirm SMS code
 router.post('/verify-code', async (req, res) => {
   const { phone, code } = req.body;
 
@@ -52,9 +63,7 @@ router.post('/verify-code', async (req, res) => {
       });
 
     if (verificationCheck.status === 'approved') {
-      // Optionally update user in DB
       await User.findOneAndUpdate({ phone }, { phone_verified: true });
-
       return res.status(200).json({ message: 'Phone verified successfully' });
     } else {
       return res.status(400).json({ message: 'Invalid or expired verification code' });
@@ -65,8 +74,6 @@ router.post('/verify-code', async (req, res) => {
   }
 });
 
-
-
 // Register Route
 router.post('/register', async (req, res) => {
   try {
@@ -75,7 +82,6 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Check if user exists
     const existingUser = await User.findOne({ $or: [{ phone }, { username }] });
     if (existingUser) return res.status(400).json({ message: 'User already exists' });
 
@@ -85,7 +91,7 @@ router.post('/register', async (req, res) => {
     const token = generateToken(user._id);
     res.status(201).json({ message: 'User registered successfully', token });
   } catch (err) {
-      console.error("Login failed:", err);
+    console.error("Registration failed:", err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
@@ -104,15 +110,9 @@ router.post('/login', async (req, res) => {
     const token = generateToken(user._id);
     res.status(200).json({ message: 'Login successful', token });
   } catch (err) {
-      console.error("Login failed:", err);
+    console.error("Login failed:", err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
 module.exports = router;
-// This code defines authentication routes for user registration and login.
-// It uses Express.js to create a router and Mongoose to interact with a MongoDB database.
-// The routes include error handling and JWT generation for secure authentication.
-// The register route checks if a user already exists, creates a new user, and generates a JWT token.
-// The login route verifies user credentials, generates a JWT token, and returns it to the client.
-// This is essential for user authentication in web applications.
