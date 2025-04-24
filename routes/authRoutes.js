@@ -15,10 +15,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 };
 
 // Twilio SMS verification
-router.post('/send-verification', async (req, res) => {
-  const { phone } = req.body;
+router.post('/verify-code', async (req, res) => {
+  const { phone, code } = req.body;
 
-  if (!phone) return res.status(400).json({ message: 'Phone number is required' });
+  if (!phone || !code) {
+    return res.status(400).json({ message: 'Phone and verification code are required' });
+  }
 
   // Format phone number to E.164
   const formattedPhone = phone.replace(/\D/g, '');
@@ -27,25 +29,25 @@ router.post('/send-verification', async (req, res) => {
     : `+1${formattedPhone}`;
 
   try {
-    const verification = await client.verify.v2
+    const verificationCheck = await client.verify.v2
       .services(process.env.TWILIO_VERIFY_SERVICE_ID)
-      .verifications.create({
+      .verificationChecks.create({
         to: internationalPhone,
-        channel: 'sms'
+        code
       });
 
-    console.log("Twilio verification response:", verification);
-
-    if (verification && verification.sid) {
-      res.status(200).json({ message: 'Verification code sent', sid: verification.sid });
+    if (verificationCheck.status === 'approved') {
+      await User.findOneAndUpdate({ phone }, { phone_verified: true });
+      return res.status(200).json({ message: 'Phone verified successfully' });
     } else {
-      res.status(500).json({ message: 'Failed to send verification code: Invalid response' });
+      return res.status(400).json({ message: 'Invalid or expired verification code' });
     }
   } catch (err) {
-    console.error('Twilio verification error:', err.message);
-    res.status(500).json({ message: 'Failed to send verification code', error: err.message });
+    console.error('Twilio verify check error:', err.message);
+    return res.status(500).json({ message: 'Verification failed. Try again.' });
   }
 });
+
 
 // Confirm SMS code
 router.post('/verify-code', async (req, res) => {
