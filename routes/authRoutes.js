@@ -45,7 +45,8 @@ router.post('/verify-code', async (req, res) => {
   } catch (err) {
     console.error('Twilio verify check error:', err.message);
     return res.status(500).json({ message: 'Verification failed. Try again.' });
-  }
+  } console.log("Using Twilio Verify SID:", process.env.TWILIO_VERIFY_SERVICE_ID);
+
 });
 
 // Register Route
