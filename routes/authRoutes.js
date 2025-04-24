@@ -48,35 +48,6 @@ router.post('/verify-code', async (req, res) => {
   }
 });
 
-
-// Confirm SMS code
-router.post('/verify-code', async (req, res) => {
-  const { phone, code } = req.body;
-
-  if (!phone || !code) {
-    return res.status(400).json({ message: 'Phone and verification code are required' });
-  }
-
-  try {
-    const verificationCheck = await client.verify.v2
-      .services(process.env.TWILIO_VERIFY_SERVICE_ID)
-      .verificationChecks.create({
-        to: phone,
-        code
-      });
-
-    if (verificationCheck.status === 'approved') {
-      await User.findOneAndUpdate({ phone }, { phone_verified: true });
-      return res.status(200).json({ message: 'Phone verified successfully' });
-    } else {
-      return res.status(400).json({ message: 'Invalid or expired verification code' });
-    }
-  } catch (err) {
-    console.error('Twilio verify check error:', err.message);
-    return res.status(500).json({ message: 'Verification failed. Try again.' });
-  }
-});
-
 // Register Route
 router.post('/register', async (req, res) => {
   try {
