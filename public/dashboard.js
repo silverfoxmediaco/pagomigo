@@ -30,7 +30,7 @@ async function loadDashboard() {
     });
     const profile = await profileRes.json();
 
-    document.getElementById('user-name').textContent = profile.name;
+    document.getElementById('user-name').textContent = profile.username || profile.name;
     document.getElementById('user-email').textContent = profile.email;
     document.getElementById('user-kyc').textContent = profile.kyc_status;
 
