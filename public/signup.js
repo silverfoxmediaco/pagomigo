@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const name = document.getElementById("name").value;
     const username = document.getElementById("username").value;
     const rawPhone = document.getElementById("signup-phone").value;
-    const password = document.getElementById("password").value;
+    const password = document.getElementById("signup-password").value;
 
     const phone = normalizePhone(rawPhone); // 🔄 Format to +1XXXXXXXXXX
 
