@@ -23,23 +23,27 @@ const API_BASE = 'https://pagomigo.com';
 // Fetch user profile, transactions, and incoming requests
 async function loadDashboard() {
   try {
-
     const profileRes = await fetch(`${API_BASE}/api/user/profile`, {
-  credentials: 'include'
-});
+      method: 'GET',
+      credentials: 'include'
+    });
+
+    if (profileRes.status === 401) {
+      window.location.href = 'login.html';
+      return;
+    }
 
     const profile = await profileRes.json();
 
-    document.getElementById('user-name').textContent = profile.username || profile.name;
+    document.getElementById('user-name').textContent = `Welcome, ${profile.username || profile.name}!`;
     document.getElementById('user-email').textContent = profile.email;
     document.getElementById('user-kyc').textContent = profile.kyc_status;
 
     const txRes = await fetch(`${API_BASE}/api/transactions/history`, {
-    credentials: 'include'
-  });
+      credentials: 'include'
+    });
 
     const transactions = await txRes.json();
-
     const txList = document.getElementById('transaction-list');
     txList.innerHTML = '';
     transactions.forEach(tx => {
@@ -49,10 +53,10 @@ async function loadDashboard() {
     });
 
     const reqRes = await fetch(`${API_BASE}/api/requests`, {
-     credentials: 'include'
+      credentials: 'include'
     });
-    const requests = await reqRes.json();
 
+    const requests = await reqRes.json();
     const reqList = document.getElementById('request-list');
     reqList.innerHTML = '';
     requests.forEach(req => {
@@ -78,6 +82,7 @@ async function loadDashboard() {
 
   } catch (err) {
     console.error('Dashboard load error:', err);
+    window.location.href = 'login.html';
   }
 }
 
