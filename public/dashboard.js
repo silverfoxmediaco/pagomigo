@@ -126,3 +126,56 @@ if (document.readyState === 'loading') {
 } else {
   loadDashboard();
 }
+
+const modal = document.getElementById('editProfileModal');
+const openBtn = document.getElementById('openEditProfileModal');
+const closeProfileBtn = document.querySelector('.close-profile-modal');
+const form = document.getElementById('editProfileForm');
+
+openBtn.addEventListener('click', async () => {
+  // Load current profile
+  const res = await fetch(`${API_BASE}/api/user/profile`, {
+    credentials: 'include'
+  });
+
+  if (res.ok) {
+    const user = await res.json();
+    document.getElementById('edit-name').value = user.name || '';
+    document.getElementById('edit-username').value = user.username || '';
+    document.getElementById('edit-email').value = user.email || '';
+    document.getElementById('edit-phone').value = user.phone || '';
+    document.getElementById('edit-address').value = user.address || '';
+    modal.classList.add('open');
+  }
+});
+
+closeProfileBtn.addEventListener('click', () => {
+  modal.classList.remove('open');
+});
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const updatedUser = {
+    name: document.getElementById('edit-name').value,
+    username: document.getElementById('edit-username').value,
+    email: document.getElementById('edit-email').value,
+    phone: document.getElementById('edit-phone').value,
+    address: document.getElementById('edit-address').value
+  };
+
+  const res = await fetch(`${API_BASE}/api/user/profile`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(updatedUser)
+  });
+
+  if (res.ok) {
+    alert("Profile updated!");
+    modal.classList.remove('open');
+    loadDashboard(); // refresh the UI
+  } else {
+    alert("Failed to update profile.");
+  }
+});
