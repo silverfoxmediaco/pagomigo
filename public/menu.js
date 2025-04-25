@@ -10,20 +10,31 @@ document.addEventListener("DOMContentLoaded", () => {
       <li id="authMenuItem"><a href="login.html">Login</a></li>
     `;
   
-    // Token check to swap Login -> Logout
-    const token = localStorage.getItem("token");
+    // Session-based login check
+  try {
+    const res = await fetch('https://pagomigo.com/api/user/profile', {
+      method: 'GET',
+      credentials: 'include'
+    });
+
     const authItem = document.getElementById("authMenuItem");
-    if (authItem) {
-      if (token) {
-        authItem.innerHTML = `<a href="#">Logout</a>`;
-        authItem.addEventListener("click", (e) => {
-          e.preventDefault();
-          localStorage.removeItem("token");
-          window.location.href = "home.html";
+
+    if (res.ok && authItem) {
+      authItem.innerHTML = `<a href="#">Logout</a>`;
+      authItem.addEventListener("click", async (e) => {
+        e.preventDefault();
+        await fetch('https://pagomigo.com/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include'
         });
-      }
+        window.location.href = "home.html";
+      });
     }
-  });
+  } catch (err) {
+    console.warn("Auth check failed:", err);
+  }
+});
+
 
   // Burger menu logic
   const hamburger = document.getElementById("hamburger");
