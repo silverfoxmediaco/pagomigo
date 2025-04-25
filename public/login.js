@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
 
     const phone = document.getElementById("login-phone").value;
-    const password = document.getElementById("password").value;
+    const password = document.getElementById("login-password").value;
 
     try {
       const response = await fetch(`${API_BASE}/api/auth/login`, {
