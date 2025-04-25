@@ -17,7 +17,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 // Twilio SMS verification
 router.post('/verify-code', async (req, res) => {
   const { phone, code } = req.body;
-
+console.log("Using Twilio Verify SID:", process.env.TWILIO_VERIFY_SERVICE_ID);
   if (!phone || !code) {
     return res.status(400).json({ message: 'Phone and verification code are required' });
   }
@@ -45,7 +45,7 @@ router.post('/verify-code', async (req, res) => {
   } catch (err) {
     console.error('Twilio verify check error:', err.message);
     return res.status(500).json({ message: 'Verification failed. Try again.' });
-  } console.log("Using Twilio Verify SID:", process.env.TWILIO_VERIFY_SERVICE_ID);
+  } 
 
 });
 
@@ -89,5 +89,35 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
+
+  // Send Verification Code
+router.post('/send-verification', async (req, res) => {
+  const { phone } = req.body;
+
+  if (!phone) {
+    return res.status(400).json({ message: 'Phone number is required' });
+  }
+
+  // Format phone number to E.164
+  const formattedPhone = phone.replace(/\D/g, '');
+  const internationalPhone = formattedPhone.startsWith('1')
+    ? `+${formattedPhone}`
+    : `+1${formattedPhone}`;
+
+  try {
+    await client.verify.v2
+      .services(process.env.TWILIO_VERIFY_SERVICE_ID)
+      .verifications.create({
+        to: internationalPhone,
+        channel: 'sms'
+      });
+
+    res.status(200).json({ message: 'Verification code sent' });
+  } catch (err) {
+    console.error('Twilio send verification error:', err.message);
+    res.status(500).json({ message: 'Failed to send verification code' });
+  }
+});
+
 
 module.exports = router;
