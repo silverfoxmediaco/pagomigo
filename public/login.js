@@ -20,13 +20,14 @@ document.addEventListener("DOMContentLoaded", function () {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ phone, password }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", result.token);
+        
         window.location.href = "dashboard.html"; // or wherever your dashboard lives
       } else {
         messageEl.textContent = result.message || "Login failed.";
