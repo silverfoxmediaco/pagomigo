@@ -1,6 +1,8 @@
 // server.js
 
 require('dotenv').config();
+const express = require('express');
+
 const path = require('path');
 const cors = require('cors');
 const session = require('express-session');
