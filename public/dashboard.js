@@ -23,11 +23,11 @@ const API_BASE = 'https://pagomigo.com';
 // Fetch user profile, transactions, and incoming requests
 async function loadDashboard() {
   try {
-    const token = localStorage.getItem('token');
 
     const profileRes = await fetch(`${API_BASE}/api/user/profile`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+  credentials: 'include'
+});
+
     const profile = await profileRes.json();
 
     document.getElementById('user-name').textContent = profile.username || profile.name;
@@ -35,8 +35,9 @@ async function loadDashboard() {
     document.getElementById('user-kyc').textContent = profile.kyc_status;
 
     const txRes = await fetch(`${API_BASE}/api/transactions/history`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    credentials: 'include'
+  });
+
     const transactions = await txRes.json();
 
     const txList = document.getElementById('transaction-list');
@@ -48,7 +49,7 @@ async function loadDashboard() {
     });
 
     const reqRes = await fetch(`${API_BASE}/api/requests`, {
-      headers: { Authorization: `Bearer ${token}` }
+     credentials: 'include'
     });
     const requests = await reqRes.json();
 
@@ -82,11 +83,11 @@ async function loadDashboard() {
 
 async function approveRequest(requestId) {
   try {
-    const token = localStorage.getItem('token');
     const res = await fetch(`${API_BASE}/api/requests/${requestId}/approve`, {
-      method: 'PUT',
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    method: 'PUT',
+    credentials: 'include'
+  });
+
 
     const result = await res.json();
     alert(result.message || 'Request approved');
@@ -99,11 +100,11 @@ async function approveRequest(requestId) {
 
 async function declineRequest(requestId) {
   try {
-    const token = localStorage.getItem('token');
     const res = await fetch(`${API_BASE}/api/requests/${requestId}/decline`, {
-      method: 'PUT',
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    method: 'PUT',
+    credentials: 'include'
+  });
+
 
     const result = await res.json();
     alert(result.message || 'Request declined');
