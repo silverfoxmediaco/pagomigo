@@ -29,6 +29,13 @@ app.use((req, res, next) => {
   }
 });
 
+// In Express server.js or app.js
+app.use((req, res, next) => {
+  if (req.hostname === 'pagomigo.com') {
+    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
+  }
+  next();
+});
 
 
 app.get('*', (req, res) => {
