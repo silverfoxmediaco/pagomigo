@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   
     // Session-based login check
+  (async () => {
   try {
     const res = await fetch('https://pagomigo.com/api/user/profile', {
       method: 'GET',
@@ -33,7 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
   } catch (err) {
     console.warn("Auth check failed:", err);
   }
-});
+})();
+
 
 
   // Burger menu logic
