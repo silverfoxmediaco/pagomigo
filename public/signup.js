@@ -1,5 +1,3 @@
-// signup.js
-
 const API_BASE = 'https://pagomigo.com';
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -13,8 +11,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const name = document.getElementById("name").value;
     const username = document.getElementById("username").value;
-    const email = document.getElementById("email").value;
+    const rawPhone = document.getElementById("signup-phone").value;
     const password = document.getElementById("password").value;
+
+    const phone = normalizePhone(rawPhone); // 🔄 Format to +1XXXXXXXXXX
 
     try {
       const response = await fetch(`${API_BASE}/api/auth/signup`, {
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, username, email, password }),
+        body: JSON.stringify({ name, username, phone, password }),
       });
 
       const result = await response.json();
@@ -30,7 +30,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (response.ok) {
         signupForm.reset();
-        alert("Signup successful! Please check your email to verify.");
+        alert("Signup successful! Please check your phone for a verification code.");
+        // Optional: redirect to verification modal/page
+        // window.location.href = "verify.html";
       }
 
     } catch (error) {
@@ -38,4 +40,11 @@ document.addEventListener("DOMContentLoaded", function () {
       messageEl.textContent = "Error signing up. Please try again later.";
     }
   });
+
+  function normalizePhone(input) {
+    const digits = input.replace(/\D/g, '');
+    return digits.length === 11 && digits.startsWith('1')
+      ? `+${digits}`
+      : `+1${digits}`;
+  }
 });
