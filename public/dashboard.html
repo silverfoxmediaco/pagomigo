@@ -48,7 +48,27 @@
     </section>
   </main>
 
-  
+  <section class="dashboardmodal">
+    <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-profile-modal">&times;</span>
+      <h2>Edit Profile</h2>
+      <form id="editProfileForm">
+        <input type="text" id="edit-name" placeholder="Full Name" required />
+        <input type="text" id="edit-username" placeholder="Username" required />
+        <input type="email" id="edit-email" placeholder="Email" required />
+        <input type="text" id="edit-phone" placeholder="Phone Number" required />
+        <input type="text" id="edit-address" placeholder="Address" required />
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+<!-- Button to trigger modal -->
+<button id="openEditProfileModal">Edit Profile</button>
+
+  </section>
   
 
   
