@@ -29,6 +29,38 @@
       <input class="input" type="password" id="login-password" placeholder="Password" required />
       <button type="submit" class="login-button">Login</button>
     </form>
+      <p><a href="#" id="forgot-password-link">Forgot password?</a></p>
+
+<!-- Reset Password Modal -->
+<div id="resetPasswordModal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close-reset-modal">&times;</span>
+    <div id="reset-step-phone">
+      <h2>Reset Password</h2>
+      <form id="resetPhoneForm">
+        <input type="tel" id="reset-phone" placeholder="Phone Number" required />
+        <button type="submit">Send Code</button>
+      </form>
+    </div>
+
+    <div id="reset-step-code" class="hidden">
+      <h2>Enter Code</h2>
+      <form id="verifyCodeForm">
+        <input type="text" id="reset-code" placeholder="6-digit Code" required />
+        <button type="submit">Verify</button>
+      </form>
+    </div>
+
+    <div id="reset-step-newpass" class="hidden">
+      <h2>Set New Password</h2>
+      <form id="newPasswordForm">
+        <input type="password" id="new-password" placeholder="New Password" required />
+        <button type="submit">Update Password</button>
+      </form>
+    </div>
+  </div>
+</div>
+
     <p id="login-message"></p>
     <hr />
   </main>
