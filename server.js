@@ -50,8 +50,23 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') return next(); 
   
-  if (req.hostname === 'pagomigo.com'( }  
-  return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
+  if (req.hostname === 'pagomigo.com') {  
+    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
+  }
+  if (req.hostname === 'www.pagomigo.com') {
+    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
+  }
+  if (req.hostname === 'test.pagomigo.com') {
+    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
+  }
+  if (req.hostname === 'api.pagomigo.com') {
+    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
+  }
+  if (req.hostname === 'test.api.pagomigo.com') {
+    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
+  }
+  if (req.hostname === 'localhost') {
+    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
   }
   next();
 });
