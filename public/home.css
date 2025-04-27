@@ -5,6 +5,12 @@ main {
   padding: 2rem;
 }
 
+.heroh1 {
+  font-size: 50px;
+    color: #0033cc;
+    margin-bottom: 1rem;
+}
+
 h2 {
   font-size: 1.8rem;
   color: #2A2D34;
