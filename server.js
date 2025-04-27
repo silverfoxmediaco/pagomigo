@@ -20,6 +20,7 @@ app.use(cors({
   origin: 'https://www.pagomigo.com',
   credentials: true
 }));
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'someSecret',
   resave: false,
@@ -30,6 +31,7 @@ app.use(session({
     httpOnly: true
   }
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -46,8 +48,10 @@ app.use((req, res, next) => {
 
 // In Express server.js or app.js
 app.use((req, res, next) => {
-  if (req.hostname === 'pagomigo.com') {
-    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
+  if (req.method === 'OPTIONS') return next(); 
+  
+  if (req.hostname === 'pagomigo.com'( }  
+  return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
   }
   next();
 });
