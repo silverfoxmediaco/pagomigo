@@ -9,7 +9,7 @@ function normalizePhone(input) {
 // === LOGIN LOGIC ===
 document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.getElementById("login-form");
-  const messageEl = document.getElementById("message");
+  const messageEl = document.getElementById("login-message");
 
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
