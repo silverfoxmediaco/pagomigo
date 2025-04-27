@@ -247,6 +247,12 @@ h2 {
     .debit-card-grid {
       grid-template-columns: 1fr;
     }
+
+    .heroh1 {
+  font-size: 25px;
+    color: #0033cc;
+    margin-bottom: 1rem;
+}
   
     .debit-card-text h2 {
       font-size: 30px;
