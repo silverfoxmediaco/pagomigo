@@ -35,9 +35,6 @@ const router = express.Router();
 const User = require('../models/User');
 const requireAuth = require('../middleware/requireAuth');
 
-// @route   GET /api/user/profile
-// @desc    Get authenticated user dashboard data
-// @access  Private
 router.get('/profile', requireAuth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -48,6 +45,7 @@ router.get('/profile', requireAuth, async (req, res) => {
 
     res.status(200).json({
       name: user.name,
+      phone: user.phone,
       email: user.email,
       kyc_status: user.kyc_status,
       createdAt: user.createdAt
