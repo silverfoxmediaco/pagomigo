@@ -2,7 +2,7 @@
 
 require('dotenv').config();
 const express = require('express');
-
+const MongoStore = require('connect-mongo');
 const path = require('path');
 const cors = require('cors');
 const session = require('express-session');
@@ -24,6 +24,11 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'someSecret',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    collectionName: 'sessions',
+    ttl: 14 * 24 * 60 * 60 // Sessions expire in 14 days
+  }),
   cookie: {
     secure: true,
     sameSite: 'none',
