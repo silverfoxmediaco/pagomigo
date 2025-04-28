@@ -55,7 +55,15 @@ router.post('/register', async (req, res) => {
     const user = new User({ name, phone, username, password });
     await user.save();
 
-    const token = generateToken(user._id);
+    req.session.userId = user._id;
+req.session.save((err) => {
+  if (err) {
+    console.error("Session save error during registration:", err);
+    return res.status(500).json({ message: 'Session error' });
+  }
+  res.status(201).json({ message: 'User registered successfully' });
+});
+
     res.status(201).json({ message: 'User registered successfully', token });
   } catch (err) {
     console.error("Registration failed:", err);
