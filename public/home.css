@@ -97,8 +97,9 @@ h2 {
 
   .visa {
     display: block;
-    margin: 0 auto;
-    width: 50%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
     height: auto;
   }
 
@@ -269,9 +270,9 @@ h2 {
 
     .visa {
       display: block;
-      margin: 0 auto;
-
-      width: 80%;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      width: 100%;
       height: auto;
     }
 
