@@ -15,7 +15,6 @@ const requestRoutes = require('./routes/requestRoutes');
 
 const app = express();
 
-// Middleware
 app.use(cors({
   origin: 'https://www.pagomigo.com',
   credentials: true
@@ -34,9 +33,29 @@ app.use(session({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Middleware to catch URI errors
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') return next();
+
+  const isApi = req.path.startsWith('/api/');
+  const isWWW = req.hostname === 'www.pagomigo.com';
+  const isMainDomain = req.hostname === 'pagomigo.com';
+
+  // Block API usage from non-www domains
+  if (isMainDomain && isApi) {
+    return res.status(403).send('API access must go through www.pagomigo.com');
+  }
+
+  // Redirect HTML/page requests to www
+  if (isMainDomain && !isApi) {
+    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
+  }
+
+  next();
+});
+
 app.use((req, res, next) => {
   try {
     decodeURIComponent(req.path);
@@ -46,27 +65,6 @@ app.use((req, res, next) => {
     res.status(400).send('Bad Request');
   }
 });
-
-// In Express server.js or app.js
-app.use((req, res, next) => {
-  if (req.method === 'OPTIONS') return next(); // allow CORS preflight to pass
-
-  const isWWW = req.hostname === 'www.pagomigo.com';
-  const isMainDomain = req.hostname === 'pagomigo.com';
-  const isApiRoute = req.path.startsWith('/api/');
-  const isStaticFile = req.path.match(/\.(css|js|png|jpg|jpeg|svg|ico|woff2?|ttf|eot|mp4|mp3|pdf)$/);
-
-  // Let static and API requests pass
-  if (isWWW || isApiRoute || isStaticFile) return next();
-
-  // Redirect all non-www requests for HTML pages only
-  if (isMainDomain) {
-    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
-  }
-
-  next();
-});
-
 
 //Routes
 app.use('/api/auth', authRoutes);
