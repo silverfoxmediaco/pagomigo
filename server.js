@@ -1,5 +1,4 @@
 // server.js
-
 require('dotenv').config();
 const express = require('express');
 const MongoStore = require('connect-mongo');
@@ -40,20 +39,23 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static(path.join(__dirname, 'public')));
-
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/kyc', kycRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/requests', requestRoutes);
+// Global Redirects
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') return next();
 
   const isApi = req.path.startsWith('/api/');
   const isWWW = req.hostname === 'www.pagomigo.com';
   const isMainDomain = req.hostname === 'pagomigo.com';
-
   // Block API usage from non-www domains
   if (isMainDomain && isApi) {
     return res.status(403).send('API access must go through www.pagomigo.com');
   }
-
   // Redirect HTML/page requests to www
   if (isMainDomain && !isApi) {
     return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
@@ -61,7 +63,9 @@ app.use((req, res, next) => {
 
   next();
 });
-
+// static files
+app.use(express.static(path.join(__dirname, 'public', 'assets')));
+// URI decode error catch
 app.use((req, res, next) => {
   try {
     decodeURIComponent(req.path);
@@ -71,13 +75,6 @@ app.use((req, res, next) => {
     res.status(400).send('Bad Request');
   }
 });
-
-//Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/kyc', kycRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/transactions', transactionRoutes);
-app.use('/api/requests', requestRoutes);
 
 // Basic test route
 app.get('/api/ping', (req, res) => {
@@ -98,4 +95,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-// Export the app for testing
+
