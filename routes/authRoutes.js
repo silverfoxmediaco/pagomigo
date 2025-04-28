@@ -71,7 +71,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login Route
+// Login Route (session-based)
 router.post('/login', async (req, res) => {
   try {
     const { phone, password } = req.body;
@@ -82,13 +82,22 @@ router.post('/login', async (req, res) => {
     const isMatch = await user.comparePassword(password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-    const token = generateToken(user._id);
-    res.status(200).json({ message: 'Login successful', token });
+    req.session.userId = user._id;
+
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).json({ message: 'Session error' });
+      }
+
+      res.status(200).json({ message: 'Login successful' });
+    });
   } catch (err) {
     console.error("Login failed:", err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
+
 
   // Send Verification Code
 router.post('/send-verification', async (req, res) => {
