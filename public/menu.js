@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const navList = document.getElementById("navList");
-    if (!navList) return;
-
+  const navList = document.getElementById("navList");
+  if (navList) {
     navList.innerHTML = `
       <li><a href="dashboard.html">Dashboard</a></li>
       <li><a href="moneymover.html">Send/Request Money</a></li>
@@ -13,60 +12,49 @@ document.addEventListener("DOMContentLoaded", () => {
     // Token check to swap Login -> Logout
     const token = localStorage.getItem("token");
     const authItem = document.getElementById("authMenuItem");
-    if (authItem) {
-      if (token) {
-        authItem.innerHTML = `<a href="#">Logout</a>`;
-        authItem.addEventListener("click", (e) => {
-          e.preventDefault();
-          localStorage.removeItem("token");
-          window.location.href = "home.html";
-        });
-      }
+    if (authItem && token) {
+      authItem.innerHTML = `<a href="#">Logout</a>`;
+      authItem.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("token");
+        window.location.href = "home.html";
+      });
     }
   }
-);
-//
-// Burger menu logic
-const hamburger = document.getElementById("hamburger");
-const slideoutMenu = document.getElementById("slideoutMenu");
-const closeBtn = document.getElementById("closeMenu");
-if (hamburger) {
-  hamburger.addEventListener("click", () => {
-    slideoutMenu.classList.add("open");
-  });
-}
-if (closeBtn) {
-  closeBtn.addEventListener("click", () => {
-    slideoutMenu.classList.remove("open");
-  });
-}
-//
-// Close the menu when clicking outside of it
-document.addEventListener("click", (e) => {
-  if (!slideoutMenu.contains(e.target) && !hamburger.contains(e.target)) {
-    slideoutMenu.classList.remove("open");
+
+  // === Burger Menu Logic ===
+  const hamburger = document.getElementById("hamburger");
+  const slideoutMenu = document.getElementById("slideoutMenu");
+  const closeBtn = document.getElementById("closeMenu");
+
+  if (hamburger && slideoutMenu) {
+    hamburger.addEventListener("click", () => {
+      slideoutMenu.classList.add("open");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!slideoutMenu.contains(e.target) && !hamburger.contains(e.target)) {
+        slideoutMenu.classList.remove("open");
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && slideoutMenu.classList.contains("open")) {
+        slideoutMenu.classList.remove("open");
+      }
+    });
+
+    const menuLinks = slideoutMenu.querySelectorAll("a");
+    menuLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        slideoutMenu.classList.remove("open");
+      });
+    });
+  }
+
+  if (closeBtn && slideoutMenu) {
+    closeBtn.addEventListener("click", () => {
+      slideoutMenu.classList.remove("open");
+    });
   }
 });
-//
-// Close the menu when clicking on a link
-const menuLinks = slideoutMenu.querySelectorAll("a");
-menuLinks.forEach((link) => {
-  link.addEventListener("click", () => {
-    slideoutMenu.classList.remove("open");
-  });
-});
-//
-// Close the menu when pressing the Escape key
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && slideoutMenu.classList.contains("open")) {
-    slideoutMenu.classList.remove("open");
-  }
-});
-//
-// Close the menu when clicking on the close button
-const closeMenuBtn = document.getElementById("closeMenu");
-if (closeMenuBtn) {
-  closeMenuBtn.addEventListener("click", () => {
-    slideoutMenu.classList.remove("open");
-  });
-}
