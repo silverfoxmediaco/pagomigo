@@ -96,6 +96,8 @@ router.post('/login', async (req, res) => {
     console.error("Login failed:", err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
+  console.log("LOGIN SESSION:", req.sessionID);
+console.log("LOGIN SESSION DATA:", req.session);
 });
 
 
