@@ -1,18 +1,10 @@
 // routes/authRoutes.js
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const router = express.Router();
 const twilio = require('twilio');
 
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
-
-// Generate JWT
-  const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '7d' });
-};
 
 // Twilio SMS verification
 router.post('/verify-code', async (req, res) => {
