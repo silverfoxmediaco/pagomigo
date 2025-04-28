@@ -7,6 +7,5 @@ module.exports = (req, res, next) => {
   req.userId = req.session.userId;
   next();
 };
-console.log("LOGIN SESSION:", req.sessionID);
-console.log("LOGIN SESSION DATA:", req.session);
+
 
