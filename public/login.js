@@ -1,4 +1,4 @@
-const API_BASE = 'https://pagomigo.com';
+const API_BASE = 'https://www.pagomigo.com';
 
 // Shared phone formatter
 function normalizePhone(input) {
