@@ -145,15 +145,43 @@ document.addEventListener("DOMContentLoaded", function () {
 const hamburger = document.getElementById("hamburger");
 const slideoutMenu = document.getElementById("slideoutMenu");
 const closeBtn = document.getElementById("closeMenu");
-
 if (hamburger) {
   hamburger.addEventListener("click", () => {
     slideoutMenu.classList.add("open");
   });
 }
-
 if (closeBtn) {
   closeBtn.addEventListener("click", () => {
+    slideoutMenu.classList.remove("open");
+  });
+}
+//
+// Close the menu when clicking outside of it
+document.addEventListener("click", (e) => {
+  if (!slideoutMenu.contains(e.target) && !hamburger.contains(e.target)) {
+    slideoutMenu.classList.remove("open");
+  }
+});
+//
+// Close the menu when clicking on a link
+const menuLinks = slideoutMenu.querySelectorAll("a");
+menuLinks.forEach((link) => {
+  link.addEventListener("click", () => {
+    slideoutMenu.classList.remove("open");
+  });
+});
+//
+// Close the menu when pressing the Escape key
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && slideoutMenu.classList.contains("open")) {
+    slideoutMenu.classList.remove("open");
+  }
+});
+//
+// Close the menu when clicking on the close button
+const closeMenuBtn = document.getElementById("closeMenu");
+if (closeMenuBtn) {
+  closeMenuBtn.addEventListener("click", () => {
     slideoutMenu.classList.remove("open");
   });
 }
