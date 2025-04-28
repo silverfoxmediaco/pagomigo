@@ -35,6 +35,7 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+
 // Middleware to catch URI errors
 app.use((req, res, next) => {
   try {
@@ -48,84 +49,24 @@ app.use((req, res, next) => {
 
 // In Express server.js or app.js
 app.use((req, res, next) => {
-  if (req.method === 'OPTIONS') return next(); 
+  if (req.method === 'OPTIONS') return next(); // allow CORS preflight to pass
 
-  const ignorePaths = ['/favicon.ico', '/robots.txt', '/sitemap.xml'];
-  if (ignorePaths.includes(req.path)) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/api/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/public/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/static/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/assets/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/images/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/css/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/js/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/fonts/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/videos/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/audio/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/docs/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/uploads/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/downloads/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/api/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/api/v1/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/api/v2/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  if (req.path.startsWith('/api/v3/')) {
-    return res.status(200).send('Pagomigo API is alive!');
-  }
-  
-  if (req.hostname === 'pagomigo.com') {  
+  const isWWW = req.hostname === 'www.pagomigo.com';
+  const isMainDomain = req.hostname === 'pagomigo.com';
+  const isApiRoute = req.path.startsWith('/api/');
+  const isStaticFile = req.path.match(/\.(css|js|png|jpg|jpeg|svg|ico|woff2?|ttf|eot|mp4|mp3|pdf)$/);
+
+  // Let static and API requests pass
+  if (isWWW || isApiRoute || isStaticFile) return next();
+
+  // Redirect all non-www requests for HTML pages only
+  if (isMainDomain) {
     return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
   }
-  if (req.hostname === 'www.pagomigo.com') {
-    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
-  }
-  if (req.hostname === 'test.pagomigo.com') {
-    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
-  }
-  if (req.hostname === 'api.pagomigo.com') {
-    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
-  }
-  if (req.hostname === 'test.api.pagomigo.com') {
-    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
-  }
-  if (req.hostname === 'localhost') {
-    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
-  }
+
   next();
 });
+
 
 //Routes
 app.use('/api/auth', authRoutes);
