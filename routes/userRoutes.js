@@ -53,7 +53,9 @@ router.get('/profile', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('User profile error:', error);
     res.status(500).json({ message: 'Server error' });
-  }
+  }console.log("PROFILE SESSION:", req.sessionID);
+console.log("PROFILE SESSION DATA:", req.session);
+
 });
 
 module.exports = router;
