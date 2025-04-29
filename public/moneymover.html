@@ -25,6 +25,7 @@
       <li><a href="/">Home</a></li>
       <li><a href="#">Settings</a></li>
       <li><a href="login.html">Login</a></li>
+      <li><a href="billpay.html">Bill Pay</a></li>
     </ul>
   </nav>
 
@@ -37,7 +38,7 @@
     <section id="sendSection" class="form-section">
       <h2>Send Money</h2>
       <form id="sendForm">
-        <input type="text" name="recipientPame" placeholder="Recipient Phone" required>
+        <input type="text" name="recipientName" placeholder="Recipient Phone" required>
         <input type="text" name="recipientCountry" placeholder="Country Code (e.g., MX)" required>
         <input type="number" name="amountUsd" placeholder="Amount in USD" required>
         <button type="submit">Send</button>
@@ -47,7 +48,7 @@
     <section id="requestSection" class="form-section hidden">
       <h2>Request Money</h2>
       <form id="requestForm">
-        <input type="text" id="requestedFrom" name="requestedFrom" placeholder="Name or Email" required>
+        <input type="text" id="requestedFrom" name="requestedFrom" placeholder="Username or Phone" required>
         <input type="text" name="requestNote" placeholder="Reason / Note" required>
         <input type="number" name="amountUsd" placeholder="Amount in USD" required>
         <button type="submit">Request</button>
