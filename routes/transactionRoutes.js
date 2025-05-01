@@ -1,3 +1,4 @@
+
 // routes/transactionRoutes.js
 const express = require('express');
 const router = express.Router();
@@ -87,7 +88,7 @@ router.post('/send', requireAuth, async (req, res) => {
 // @access  Private
 router.get('/history', requireAuth, async (req, res) => {
   try {
-    const transactions = await Transaction.find({ senderId: req.user.id }).sort({ createdAt: -1 });
+    const transactions = await Transaction.find({ senderId: req.userId }).sort({ createdAt: -1 });
     res.status(200).json(transactions);
   } catch (error) {
     console.error('Transaction history error:', error);

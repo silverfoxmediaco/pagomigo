@@ -54,6 +54,7 @@ h2 {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    
   }
   
   .debit-card-text h2 {
@@ -97,9 +98,80 @@ h2 {
 
   .visa {
     display: block;
-    margin: 0 auto;
-    width: 50%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
     height: auto;
+  }
+
+  .features-section {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    width: 100%;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 30px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    align-items: center;
+    justify-items: center;
+    animation: fadeInUp 0.5s ease-in-out;
+    text-align: center;
+  }
+
+  .feature-item {
+    background-color: #f5f7fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  .featuresh2 {
+    font-size: 30px;
+    color: #0033cc;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .feature-item h3 {
+    font-size: 20px;
+    margin-bottom: 0.5rem;
+    color: #0033cc;
+  }
+
+  .feature-item p {
+    font-size: 0.9rem;
+    color: #555;
+  }
+  .feature-item img {
+    width: 200px;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  .feature-item:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s;
+  }
+  .feature-item:hover img {
+    transform: rotate(360deg);
+    transition: transform 0.3s;
+  }
+  .feature-item:hover h3 {
+    color: #0056b3;
+  }
+  .feature-item:hover p {
+    color: #333;
+  }
+  .feature-item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  .feature-item:hover {
+    background-color: #e9ecef;
   }
 
   #signupbtn {
@@ -269,9 +341,9 @@ h2 {
 
     .visa {
       display: block;
-      margin: 0 auto;
-
-      width: 80%;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      width: 100%;
       height: auto;
     }
 
@@ -306,6 +378,19 @@ h2 {
   
     #signup-form {
       padding: 10px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      width: 90%;
+      margin: 0 auto;
+      padding: 20px;
+      align-items: center;
+      justify-items: center;
+      animation: fadeInUp 0.5s ease-in-out;
+      text-align: center;
     }
 
     .footer-grid {

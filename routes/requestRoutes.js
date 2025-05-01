@@ -1,5 +1,55 @@
+//New Code
 // routes/requestRoutes.js
 const express = require('express');
+const router = express.Router();
+const Request = require('../models/Request');
+const User = require('../models/User');
+const requireAuth = require('../middleware/requireAuth');
+
+// Get all requests sent to the logged-in user
+router.get('/', requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    const requests = await Request.find({ requestedFrom: user.phone })
+      .populate('requesterId', 'name')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(requests);
+  } catch (err) {
+    console.error('Fetch requests error:', err);
+    res.status(500).json({ message: 'Server error fetching requests' });
+  }
+});
+
+// Approve request
+router.put('/:id/approve', requireAuth, async (req, res) => {
+  try {
+    const updated = await Request.findByIdAndUpdate(req.params.id, { status: 'approved' }, { new: true });
+    res.json({ message: 'Request approved', request: updated });
+  } catch (err) {
+    console.error('Approve request error:', err);
+    res.status(500).json({ message: 'Failed to approve request' });
+  }
+});
+
+// Decline request
+router.put('/:id/decline', requireAuth, async (req, res) => {
+  try {
+    const updated = await Request.findByIdAndUpdate(req.params.id, { status: 'declined' }, { new: true });
+    res.json({ message: 'Request declined', request: updated });
+  } catch (err) {
+    console.error('Decline request error:', err);
+    res.status(500).json({ message: 'Failed to decline request' });
+  }
+});
+
+module.exports = router;
+
+
+
+//Old code
+// routes/requestRoutes.js
+/*const express = require('express');
 const router = express.Router();
 const requireAuth = require('../middleware/requireAuth');
 const Request = require('../models/Request');
@@ -30,14 +80,18 @@ router.post('/request', requireAuth, async (req, res) => {
 // @route   GET /api/transactions/requests
 // @desc    Get requests sent to the current user
 // @access  Private
+
+const User = require('../models/User');
 router.get('/requests', requireAuth, async (req, res) => {
   try {
-    const email = req.user.email;
-    const requests = await Request.find({ requestedFrom: email }).sort({ createdAt: -1 });
+    const user = await User.findById(req.user.id);
+    const phone = user.phone;
+    const requests = await Request.find({ requesterFrom: phone }).sort({ createdAt: -1 });
     res.status(200).json(requests);
   } catch (error) {
-    console.error('Fetch requests error:', error);
+    console.error('Get requests error:', error);
     res.status(500).json({ message: 'Server error' });
+
   }
 });
 
@@ -91,4 +145,4 @@ router.put('/request/:id/decline', requireAuth, async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = router;*/

@@ -84,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const res = await fetch(`${API_BASE}/api/auth/request-reset`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone: resetPhone }),
       });

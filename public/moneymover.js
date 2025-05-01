@@ -30,6 +30,7 @@ sendForm.addEventListener('submit', async (e) => {
 
   const formData = new FormData(sendForm);
   const data = {
+    recipientUserName: formData.get('recipientUserName'),
     recipientPhone: formData.get('recipientPhone'),
     recipientCountry: formData.get('recipientCountry'),
     amountUsd: formData.get('amountUsd'),
