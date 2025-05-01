@@ -100,7 +100,31 @@ body {
         transition: background-color 0.3s ease;
     }  
 
-.modal {
+    .editprofilebtn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+    }
+
+    #openEditProfileModal {
+      background-color: #0562ff;
+      color: white;
+      border: none;
+      padding-left: 40px;
+      padding-right: 40px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      transition: background-color 0.3s ease;
+    }
+    
+
+    .modal {
       display: none;
       position: fixed;
       z-index: 999;
@@ -120,10 +144,13 @@ body {
     
     .modal-content {
       background: white;
-      padding: 20px;
+      padding-left: 30px;
+      padding-right: 50px;
+      padding-top: 30px;
+      padding-bottom: 30px;
       border-radius: 12px;
       max-width: 400px;
-      width: 100%;
+      width: 80%;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
     
@@ -140,13 +167,15 @@ body {
     .modal-content button {
       width: 100%;
       padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
       background-color: #0562ff;
       color: white;
       border: none;
       cursor: pointer;
     }
     
-    .close-modal {
+    .close-profile-modal {
       float: right;
       cursor: pointer;
       font-size: 20px;

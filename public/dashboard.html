@@ -29,9 +29,16 @@
 
   <main class="dashboard">
     <section class="user-info">
-      <h2>Welcome, <span id="user-name">User</span></h2>
-      <p>Email: <span id="user-email">email@example.com</span></p>
+      <h2><span id="user-name">User</span></h2>
+      <p>Phone: <span id="user-phone">+1...</span></p>
+      <p>Email: <span id="user-email">Email</span></p>
+      <p>Address: <span id="user-address">Address</span></p>
       <p>KYC Status: <span id="user-kyc">pending</span></p>
+      <p>Account Balance: <span id="user-balance">$0.00</span></p>
+      
+      <div class="editprofilebtn">
+        <button id="openEditProfileModal">Edit Profile</button>
+      </div>
     </section>
 
     <section class="transactions">
@@ -50,7 +57,7 @@
   </main>
 
   <section class="dashboardmodal">
-    <!-- Edit Profile Modal -->
+     
   <div id="editProfileModal" class="modal hidden">
     <div class="modal-content">
       <span class="close-profile-modal">&times;</span>
@@ -65,14 +72,8 @@
       </form>
     </div>
   </div>
-
-<!-- Button to trigger modal -->
-<button id="openEditProfileModal">Edit Profile</button>
-
   </section>
-  
 
-  
   <footer class="site-footer">
     <div class="footer-row footer-logo">
       <img src="pagomigologo.png" alt="Pagomigo Logo" width="100" />

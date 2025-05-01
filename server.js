@@ -6,17 +6,20 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const kycRoutes = require('./routes/kycRoutes');
 const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const requestRoutes = require('./routes/requestRoutes');
+const isProd = process.env.NODE_ENV === 'production';
+const isDev = process.env.NODE_ENV === 'development';
 
 const app = express();
 
 app.use(cors({
-  origin: 'https://www.pagomigo.com',
+  origin: ['https://www.pagomigo.com', 'http://localhost:3000'],
   credentials: true
 }));
 
@@ -24,11 +27,18 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'someSecret',
   resave: false,
   saveUninitialized: false,
+  store: new MongoDBStore({
+    uri: process.env.MONGO_URI,
+    collection: 'sessions'
+  }),
   cookie: {
-    secure: true,
-    sameSite: 'none',
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
     httpOnly: true,
-    domain: '.pagomigo.com'
+    //temp disable for dev
+    //domain: isProd ? '.pagomigo.com' : undefined,
+    secure: false, // Set to true in production
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
 }));
 

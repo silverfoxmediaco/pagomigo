@@ -146,7 +146,7 @@ body {
     border: none;
     border-radius: 12px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    min-height: 515px;
+    min-height: 500px;
     margin-left: 20px;
     margin-right: 20px;
   }
@@ -194,7 +194,7 @@ body {
     margin-left: 20px;
     margin-right: 20px;
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     min-height: 515px;
   }
@@ -239,6 +239,9 @@ body {
     padding-right: 40px;
     margin-bottom: 10px;
     min-width: 200px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(210, 210, 210, 0.1);
   }
 
   .rentbtn {
@@ -253,6 +256,9 @@ body {
     padding-right: 40px;
     margin-bottom: 10px;
     min-width: 200px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(210, 210, 210, 0.1);
   }
 
   .utilitiesbtn {
@@ -261,6 +267,9 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(210, 210, 210, 0.1);
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 40px;
