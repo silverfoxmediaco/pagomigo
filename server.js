@@ -37,7 +37,6 @@ app.use(session({
     httpOnly: true,
     //temp disable for dev
     //domain: isProd ? '.pagomigo.com' : undefined,
-    secure: false, // Set to true in production
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
 }));
