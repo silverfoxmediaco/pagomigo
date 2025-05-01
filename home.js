@@ -1,5 +1,3 @@
-// join now modal
-
 // Burger menu + animation logic
 document.addEventListener("DOMContentLoaded", () => {
   const hamburger = document.getElementById("hamburger");
