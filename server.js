@@ -32,15 +32,29 @@ app.use(session({
     collectionName: 'sessions',
     ttl: 14 * 24 * 60 * 60, // 14 days
   }),
-  
-  cookie: {
+
+  app.get('/test-cookie', (req, res) => {
+  res.cookie('connect.sid', 'test-session-value', {
+    httpOnly: true,
     secure: isProd,
     sameSite: isProd ? 'none' : 'lax',
+    domain: isProd ? '.pagomigo.com' : undefined,
+    maxAge: 60 * 60 * 1000 // 1 hour
+  });
+
+  res.send('Test cookie has been set.');
+});
+
+  
+  /*cookie: {
     httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+    
     domain: isProd ? '.pagomigo.com' : undefined,
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
-}));
+}));*/
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
