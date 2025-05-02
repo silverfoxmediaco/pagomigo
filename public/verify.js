@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+console.log("Loaded latest verify.js");
 
 
 //Old Code
