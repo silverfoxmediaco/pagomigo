@@ -6,7 +6,7 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const session = require('express-session');
-const MongoDBStore = require('connect-mongodb-session')(session);
+const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const kycRoutes = require('./routes/kycRoutes');
@@ -27,10 +27,12 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'someSecret',
   resave: false,
   saveUninitialized: false,
-  store: new MongoDBStore({
-    uri: process.env.MONGO_URI,
-    collection: 'sessions'
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    collectionName: 'sessions',
+    ttl: 14 * 24 * 60 * 60, // 14 days
   }),
+  
   cookie: {
     secure: isProd,
     sameSite: isProd ? 'none' : 'lax',
