@@ -71,7 +71,9 @@ app.use((req, res, next) => {
   next();
 });
 // static files
-app.use(express.static(path.join(__dirname, 'public', 'assets')));
+//app.use(express.static(path.join(__dirname, 'public', 'assets')));
+app.use(express.static(path.join(__dirname, 'public')));
+
 // URI decode error catch
 app.use((req, res, next) => {
   try {

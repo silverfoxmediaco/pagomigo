@@ -31,13 +31,13 @@ router.post('/register', async (req, res) => {
       return res.status(409).json({ message: 'Phone number already registered.' });
     }
 
-    // (Temp disable) const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({
       name,
       username,
       phone: normalizedPhone,
-      password,
+      password: hashedPassword,
       verified: false
     });
 
@@ -117,28 +117,30 @@ router.post('/login', async (req, res) => {
 
     const normalizedPhone = normalizePhone(phone);
     const user = await User.findOne({ $or: [{ phone }, { phone: normalizedPhone }]});
+    
     console.log('Login attempt:');
     console.log('Raw phone:', phone);
     console.log('Normalized phone:', normalizedPhone);
     console.log('User found:', !!user);
+
     if (!user) {
       return res.status(404).json({ message: 'User not found.' });
       
-    }console.log('Entered password:', password);
-    console.log('Stored hash:', user.password);
+    }
+    
+    //console.log('Entered password:', password);
+    //console.log('Stored hash:', user.password);
 
-    //const isMatch = await bcrypt.compare(password, user.password);
-    //console.log('Password match:', isMatch);
-    // Check if the password matches
-    // temp change (!isMatch)
-    if (password !== user.password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Password match:', isMatch);
+    if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials.' });
     }
 
     // Save user session
     req.session.userId = user._id;
-
     res.status(200).json({ message: 'Login successful.' });
+
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ message: 'Server error during login.' });
