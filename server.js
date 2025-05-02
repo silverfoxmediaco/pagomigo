@@ -37,8 +37,7 @@ app.use(session({
     secure: isProd,
     sameSite: isProd ? 'none' : 'lax',
     httpOnly: true,
-    //temp disable for dev
-    //domain: isProd ? '.pagomigo.com' : undefined,
+    domain: isProd ? '.pagomigo.com' : undefined,
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
 }));
