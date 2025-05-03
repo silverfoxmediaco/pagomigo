@@ -35,9 +35,8 @@ app.use(session({
 
     cookie: {
     httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
-    
+    secure: true,
+    sameSite: 'lax',
     domain: isProd ? '.pagomigo.com' : undefined,
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
@@ -46,14 +45,15 @@ app.use(session({
 app.get('/test-cookie', (req, res) => {
   res.cookie('connect.sid', 'test-session-value', {
     httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
+    secure: true,
+    sameSite: 'lax',
     domain: isProd ? '.pagomigo.com' : undefined,
     maxAge: 60 * 60 * 1000 // 1 hour
   });
 
   res.send('Test cookie has been set.');
 });
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
