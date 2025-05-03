@@ -93,12 +93,19 @@ router.post('/verify-code', async (req, res) => {
       );
 
       req.session.userId = user._id;
-      console.log('User verified and session saved:', req.session.userId);
-
-      return res.status(200).json({ message: 'Phone verified successfully', user });
+      
+      req.session.save((err) => {
+        if (err) {
+          console.error("Session save error during verification:", err);
+          return res.status(500).json({ message: 'Session save failed' });
+        }
+        console.log('Session saved and user verified:', user);
+        res.status(200).json({ message: 'Phone verified successfully', user });
+      });
     } else {
       return res.status(400).json({ message: 'Invalid or expired verification code' });
     }
+    
   } catch (err) {
     console.error('Twilio verify check error:', err.message);
     return res.status(500).json({ message: 'Verification failed. Try again.' });
