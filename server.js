@@ -19,7 +19,7 @@ const isDev = process.env.NODE_ENV === 'development';
 const app = express();
 
 app.use(cors({
-  origin: ['https://www.pagomigo.com', 'http://localhost:3000'],
+  origin: 'https://www.pagomigo.com',
   credentials: true
 }));
 
