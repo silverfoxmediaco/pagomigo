@@ -36,7 +36,7 @@ app.use(session({
     cookie: {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax',
+    sameSite: 'none',
     domain: isProd ? '.pagomigo.com' : undefined,
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
@@ -46,7 +46,7 @@ app.get('/test-cookie', (req, res) => {
   res.cookie('connect.sid', 'test-session-value', {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax',
+    sameSite: 'none',
     domain: isProd ? '.pagomigo.com' : undefined,
     maxAge: 60 * 60 * 1000 // 1 hour
   });
