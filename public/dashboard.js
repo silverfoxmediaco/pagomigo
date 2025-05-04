@@ -27,14 +27,17 @@ async function loadDashboard() {
       method: 'GET',
       credentials: 'include'
     });
+    console.log('Profile response status:', profileRes.status);
 
     if (profileRes.status === 401) {
+      console.warn('Unauthorized: Redirecting to login.');
       window.location.href = 'login.html';
       return;
     }
 
     const profile = await profileRes.json();
-
+    console.log('User profile:', profile);
+    
     document.getElementById('user-name').textContent = `Welcome, ${profile.username || profile.name}!`;
 
     const phoneEl = document.getElementById('user-phone');
