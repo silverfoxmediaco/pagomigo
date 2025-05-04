@@ -21,7 +21,7 @@ if (closeBtn) {
 }
 
 // Use your custom domain as the API base
-const API_BASE = 'https://pagomigo.com';
+const API_BASE = 'https://www.pagomigo.com';
 
 // Fetch user profile, transactions, and incoming requests
 async function loadDashboard() {
