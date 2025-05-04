@@ -35,8 +35,8 @@ app.use(session({
 
     cookie: {
     httpOnly: true,
-    secure: true,
-    sameSite: 'none',
+    secure: isProd,
+    sameSite: isProd ? 'None' : 'Lax',
     domain: isProd ? '.pagomigo.com' : undefined,
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
