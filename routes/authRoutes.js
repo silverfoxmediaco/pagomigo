@@ -116,28 +116,33 @@ router.post('/verify-code', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { phone, password } = req.body;
+
     if (!phone || !password) {
       return res.status(400).json({ message: 'Phone and password are required.' });
     }
 
     const normalizedPhone = normalizePhone(phone);
-    const user = await User.findOne({ $or: [{ phone }, { phone: normalizedPhone }] });
+    console.log('Normalized phone:', normalizedPhone); // Debugging
 
+    const user = await User.findOne({ phone: normalizedPhone });
     if (!user) {
+      console.log('User not found for phone:', normalizedPhone); // Debugging
       return res.status(404).json({ message: 'User not found.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log('Password mismatch for user:', user._id); // Debugging
       return res.status(401).json({ message: 'Invalid credentials.' });
     }
 
     req.session.userId = user._id;
+    console.log('User logged in successfully:', user._id); // Debugging
     res.status(200).json({ message: 'Login successful.' });
 
   } catch (err) {
     console.error('Login error:', err);
-    res.status(500).json({ message: 'Server error during login.' });
+    res.status(500).json({ message: 'Server error during login.', error: err.message });
   }
 });
 
