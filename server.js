@@ -16,12 +16,30 @@ const isProd = process.env.NODE_ENV === 'production';
 
 const app = express();
 
+app.set('trust proxy', 1); // MUST be before session middleware
+
 app.use(cors({
   origin: ['https://www.pagomigo.com', 'http://localhost:3000'],
   credentials: true
 }));
 
+const isProd = process.env.NODE_ENV === 'production';
+
 app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: isProd,                  // true in production
+    sameSite: isProd ? 'none' : 'lax', // 'none' for cross-site cookies
+    maxAge: 24 * 60 * 60 * 1000
+  }
+}));
+
+
+
+/*app.use(session({
   secret: process.env.SESSION_SECRET || 'someSecret',
   resave: false,
   saveUninitialized: false,
@@ -38,7 +56,7 @@ app.use(session({
     domain: isProd ? '.pagomigo.com' : undefined,
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
-}));
+}));*/
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
