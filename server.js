@@ -1,41 +1,39 @@
 // server.js
 require('dotenv').config();
 const express = require('express');
-const MongoStore = require('connect-mongo');
-const path = require('path');
-const cors = require('cors');
 const session = require('express-session');
-//const MongoDBStore = require('connect-mongodb-session')(session);
+const cors = require('cors');
+const path = require('path');
 const mongoose = require('mongoose');
-const authRoutes = require('./routes/authRoutes');
-const kycRoutes = require('./routes/kycRoutes');
-const userRoutes = require('./routes/userRoutes');
-const transactionRoutes = require('./routes/transactionRoutes');
-const requestRoutes = require('./routes/requestRoutes');
+
 const isProd = process.env.NODE_ENV === 'production';
 
 const app = express();
 
-app.set('trust proxy', 1); // MUST be before session middleware
+app.set('trust proxy', 1); // 🔒 Required for secure cookies on Render
 
-app.use(cors({
-  origin: ['https://www.pagomigo.com', 'http://localhost:3000'],
-  credentials: true
-}));
-
-const isProd = process.env.NODE_ENV === 'production';
-
+// Session middleware
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: isProd,                  // true in production
-    sameSite: isProd ? 'none' : 'lax', // 'none' for cross-site cookies
+    secure: isProd, // ⬅️ must be true in production (HTTPS only)
+    sameSite: isProd ? 'none' : 'lax', // ⬅️ required for cross-site cookies
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
+
+// CORS setup
+app.use(cors({
+  origin: ['https://www.pagomigo.com', 'http://localhost:3000'],
+  credentials: true // ⬅️ this allows cookies to be accepted
+}));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 
 
@@ -57,9 +55,6 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
 }));*/
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/auth', authRoutes);
