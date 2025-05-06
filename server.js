@@ -13,7 +13,6 @@ const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const requestRoutes = require('./routes/requestRoutes');
 const isProd = process.env.NODE_ENV === 'production';
-const isDev = process.env.NODE_ENV === 'development';
 
 const app = express();
 
@@ -33,12 +32,10 @@ app.use(session({
     stringify: false,
   }),
   cookie: {
-    //secure: isProd,
+    secure: isProd,
     sameSite: isProd ? 'none' : 'lax',
     httpOnly: true,
-    //temp disable for dev
-    //domain: isProd ? '.pagomigo.com' : undefined,
-    secure: false, // Set to true in production
+    domain: isProd ? '.pagomigo.com' : undefined,
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
 }));
@@ -52,10 +49,35 @@ app.use('/api/kyc', kycRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/requests', requestRoutes);
+
 // Global Redirects
+
+const isProd = process.env.NODE_ENV === 'production';
+
 app.use((req, res, next) => {
+  // Allow CORS preflight requests to pass through
   if (req.method === 'OPTIONS') return next();
 
+  // Only apply domain enforcement in production
+  if (isProd) {
+    const isApi = req.path.startsWith('/api/');
+    const isNonWWW = req.hostname === 'pagomigo.com';
+
+    // Redirect all non-www requests (API or HTML) to www.pagomigo.com
+    // This keeps your domain consistent and avoids session/cookie issues
+    if (isNonWWW) {
+      return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
+    }
+  }
+
+  next();
+});
+
+
+
+/*app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') return next();
+//---boolean constants
   const isApi = req.path.startsWith('/api/');
   const isWWW = req.hostname === 'www.pagomigo.com';
   const isMainDomain = req.hostname === 'pagomigo.com';
@@ -69,7 +91,7 @@ app.use((req, res, next) => {
   }
 
   next();
-});
+});*/
 // static files
 //app.use(express.static(path.join(__dirname, 'public', 'assets')));
 app.use(express.static(path.join(__dirname, 'public')));
