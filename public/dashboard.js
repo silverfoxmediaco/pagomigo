@@ -23,10 +23,13 @@ const API_BASE = 'https://pagomigo.com';
 // Fetch user profile, transactions, and incoming requests
 async function loadDashboard() {
   try {
-    const profileRes = await fetch(`${API_BASE}/api/user/profile`, {
-      method: 'GET',
-      credentials: 'include'
-    });
+    const token = localStorage.getItem('token');
+const profileRes = await fetch(`${API_BASE}/api/user/profile`, {
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${token}`
+  }
+});
 
     if (profileRes.status === 401) {
       window.location.href = 'login.html';
@@ -40,8 +43,11 @@ async function loadDashboard() {
     document.getElementById('user-kyc').textContent = profile.kyc_status;
 
     const txRes = await fetch(`${API_BASE}/api/transactions/history`, {
-      credentials: 'include'
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
+    
 
     const transactions = await txRes.json();
     const txList = document.getElementById('transaction-list');
@@ -53,8 +59,11 @@ async function loadDashboard() {
     });
 
     const reqRes = await fetch(`${API_BASE}/api/requests`, {
-      credentials: 'include'
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
+    
 
     const requests = await reqRes.json();
     const reqList = document.getElementById('request-list');
@@ -89,9 +98,12 @@ async function loadDashboard() {
 async function approveRequest(requestId) {
   try {
     const res = await fetch(`${API_BASE}/api/requests/${requestId}/approve`, {
-    method: 'PUT',
-    credentials: 'include'
-  });
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
 
 
     const result = await res.json();
@@ -106,9 +118,12 @@ async function approveRequest(requestId) {
 async function declineRequest(requestId) {
   try {
     const res = await fetch(`${API_BASE}/api/requests/${requestId}/decline`, {
-    method: 'PUT',
-    credentials: 'include'
-  });
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
 
 
     const result = await res.json();
@@ -134,9 +149,13 @@ const form = document.getElementById('editProfileForm');
 
 openBtn.addEventListener('click', async () => {
   // Load current profile
-  const res = await fetch(`${API_BASE}/api/user/profile`, {
-    credentials: 'include'
-  });
+  const token = localStorage.getItem('token');
+const res = await fetch(`${API_BASE}/api/user/profile`, {
+  headers: {
+    'Authorization': `Bearer ${token}`
+  }
+});
+
 
   if (res.ok) {
     const user = await res.json();
@@ -166,10 +185,13 @@ form.addEventListener('submit', async (e) => {
 
   const res = await fetch(`${API_BASE}/api/user/profile`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
     body: JSON.stringify(updatedUser)
   });
+  
 
   if (res.ok) {
     alert("Profile updated!");

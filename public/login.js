@@ -23,17 +23,18 @@ document.addEventListener("DOMContentLoaded", function () {
         const response = await fetch(`${API_BASE}/api/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include",
           body: JSON.stringify({ phone, password }),
         });
-
+        
         const result = await response.json();
-
-        if (response.ok) {
-          window.location.href = "dashboard.html";
+        
+        if (response.ok && result.token) {
+          localStorage.setItem("token", result.token); // ✅ Store JWT
+          window.location.href = "dashboard.html";     // ✅ Redirect
         } else {
           messageEl.textContent = result.message || "Login failed.";
         }
+        
       } catch (error) {
         console.error("Login error:", error);
         messageEl.textContent = "Error logging in. Please try again.";

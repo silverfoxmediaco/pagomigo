@@ -50,26 +50,51 @@ console.log("Using Twilio Verify SID:", process.env.TWILIO_VERIFY_SERVICE_ID);
 });
 
 // Register Route
-router.post('/register', async (req, res) => {
+router.post('/verify-code', async (req, res) => {
+  const { phone, code } = req.body;
+
+  if (!phone || !code) {
+    return res.status(400).json({ message: 'Phone and verification code are required' });
+  }
+
+  const formattedPhone = phone.replace(/\D/g, '');
+  const internationalPhone = formattedPhone.startsWith('1')
+    ? `+${formattedPhone}`
+    : `+1${formattedPhone}`;
+
   try {
-    const { name, phone, username, password } = req.body;
-    if (!name || !phone || !username || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
+    const verificationCheck = await client.verify.v2
+      .services(process.env.TWILIO_VERIFY_SERVICE_ID)
+      .verificationChecks.create({
+        to: internationalPhone,
+        code
+      });
+
+    if (verificationCheck.status === 'approved') {
+      const user = await User.findOneAndUpdate(
+        { phone },
+        { phone_verified: true },
+        { new: true }
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const token = generateToken(user._id);
+      return res.status(200).json({
+        message: 'Phone verified successfully',
+        token
+      });
+    } else {
+      return res.status(400).json({ message: 'Invalid or expired verification code' });
     }
-
-    const existingUser = await User.findOne({ $or: [{ phone }, { username }] });
-    if (existingUser) return res.status(400).json({ message: 'User already exists' });
-
-    const user = new User({ name, phone, username, password });
-    await user.save();
-
-    const token = generateToken(user._id);
-    res.status(201).json({ message: 'User registered successfully', token });
   } catch (err) {
-    console.error("Registration failed:", err);
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error('Twilio verify check error:', err.message);
+    return res.status(500).json({ message: 'Verification failed. Try again.' });
   }
 });
+
 
 // Login Route
 router.post('/login', async (req, res) => {

@@ -2,7 +2,6 @@
 
 require('dotenv').config();
 const express = require('express');
-
 const path = require('path');
 const cors = require('cors');
 const session = require('express-session');
@@ -17,20 +16,30 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'https://www.pagomigo.com',
+  origin: ['https://www.pagomigo.com', 'https://pagomigo.com', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Authorization'],
   credentials: true
 }));
+console.log('CORS enabled for origins: https://www.pagomigo.com, https://pagomigo.com, http://localhost:3000');
 
-app.use(session({
+//const isProd = process.env.NODE_ENV === 'production';
+//app.use(session({
+const sessionOptions = { //temp
   secret: process.env.SESSION_SECRET || 'someSecret',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true,
-    sameSite: 'none',
+    secure: isProd, // Set to true if using HTTPS
+    sameSite: isProd ? 'none' : 'lax', // Adjust based on your needs
     httpOnly: true
   }
-}));
+};
+
+console.log('Session options:0, sessionOptions')
+app.use(session(sessionOptions));
+// Middleware to parse JSON and URL-encoded data
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
