@@ -65,14 +65,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         let data;
-        try {
-          data = await res.json();
-        } catch (parseErr) {
-          const text = await res.text();
-          console.error("Non-JSON response from /register:", text);
-          messageEl.textContent = "Unexpected server response.";
-          return;
-        }
+          try {
+            const clone = res.clone(); //make a copy
+            data = await res.json();
+          } catch (parseErr) {
+            const text = await res.text(); //safe to read now
+            console.error("Non-JSON response from /register:", text);
+            messageEl.textContent = "Unexpected server response.";
+            return;
+          }
+
 
         if (!res.ok) {
           messageEl.textContent = data.message || "Signup failed. Try again.";
