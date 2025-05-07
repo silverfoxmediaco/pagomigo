@@ -11,6 +11,8 @@ const kycRoutes = require('./routes/kycRoutes');
 const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const requestRoutes = require('./routes/requestRoutes');
+const isProd = process.env.NODE_ENV === 'production';
+
 
 const app = express();
 
