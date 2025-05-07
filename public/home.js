@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const name = document.getElementById("name").value();
       const username = document.getElementById("username").value();
       const phone = document.getElementById("phone").value();
-      const password = document.getElementById("signup-password").value;
+      const password = document.getElementById("signup-password").value();
 
       try {
         const res = await fetch("/api/auth/register", {
