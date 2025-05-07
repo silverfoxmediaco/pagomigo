@@ -64,17 +64,17 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({ name, username, phone, password })
         });
 
+        const resClone = res.clone();
         let data;
-        let clone = res.clone();
-          try {
-            data = await clone.json();
-          } catch (parseErr) {
-            const fallbackText = await clone.text(); //safe to read now
-            console.error("Non-JSON response from /register:", fallbackText);
-            messageEl.textContent = "Unexpected server response.";
-            return;
-          }
 
+        try {
+          data = await res.json();
+        } catch (parseErr) {
+          const fallbackText = await resClone.text();
+          console.error("Non-JSON response from /register:", fallbackText);
+          messageEl.textContent = "Unexpected server response.";
+          return;
+        }
 
         if (!res.ok) {
           messageEl.textContent = data.message || "Signup failed. Try again.";
