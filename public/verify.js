@@ -1,7 +1,5 @@
 // verify.js
 
-//New Code
-
 document.addEventListener("DOMContentLoaded", () => {
   const verifyForm = document.getElementById("verifyForm");
   const messageEl = document.getElementById("verify-message");
@@ -27,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: {
           "Content-Type": "application/json"
         },
-        credentials: "include",
         body: JSON.stringify({ phone, code })
       });
 
@@ -36,6 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (res.ok) {
         messageEl.textContent = "Phone verified! Redirecting...";
         localStorage.removeItem("phone");
+        if (result.token) {
+          localStorage.setItem("token", result.token);
+        }
         setTimeout(() => window.location.href = "/dashboard.html", 1500);
       } else {
         messageEl.textContent = result.message || "Verification failed.";
@@ -46,7 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 console.log("Loaded latest verify.js");
+
 
 
 //Old Code
