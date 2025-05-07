@@ -1,73 +1,47 @@
-//New Code
 // routes/authRoutes.js
 const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const router = express.Router();
 const twilio = require('twilio');
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const verifySid = process.env.TWILIO_VERIFY_SERVICE_ID;
-const client = twilio(accountSid, authToken);
+const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 
-// Normalize phone to E.164 format
-function normalizePhone(input) {
-  const digits = input.replace(/\D/g, '');
-  return digits.length === 11 && digits.startsWith('1') ? `+${digits}` : `+1${digits}`;
-}
+// Generate JWT
+const generateToken = (userId) => {
+  return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '7d' });
+};
 
-// Register new user
-router.post('/register', async (req, res) => {
-  try {
-    const { name, username, phone, password } = req.body;
-    if (!name || !username || !phone || !password) {
-      return res.status(400).json({ message: 'All fields are required.' });
-    }
-
-    const normalizedPhone = normalizePhone(phone);
-    const existingUser = await User.findOne({ phone: normalizedPhone });
-    if (existingUser) {
-      return res.status(409).json({ message: 'Phone number already registered.' });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = new User({
-      name,
-      username,
-      phone: normalizedPhone,
-      password: hashedPassword,
-      verified: false
-    });
-
-    await user.save();
-    res.status(201).json({ message: 'Account created!' });
-  } catch (err) {
-    console.error('Registration error:', err);
-    res.status(500).json({ message: 'Server error during registration.' });
-  }
-});
-
-// Send verification code using Twilio
+// Send Verification Code
 router.post('/send-verification', async (req, res) => {
+  const { phone } = req.body;
+
+  if (!phone) {
+    return res.status(400).json({ message: 'Phone number is required' });
+  }
+
+  const formattedPhone = phone.replace(/\D/g, '');
+  const internationalPhone = formattedPhone.startsWith('1')
+    ? `+${formattedPhone}`
+    : `+1${formattedPhone}`;
+
   try {
-    const { phone } = req.body;
-    const normalizedPhone = normalizePhone(phone);
+    await client.verify.v2
+      .services(process.env.TWILIO_VERIFY_SERVICE_ID)
+      .verifications.create({
+        to: internationalPhone,
+        channel: 'sms'
+      });
 
-    await client.verify.v2.services(verifySid).verifications.create({
-      to: normalizedPhone,
-      channel: 'sms'
-    });
-
-    res.status(200).json({ message: 'Verification code sent.' });
+    res.status(200).json({ message: 'Verification code sent' });
   } catch (err) {
-    console.error('Twilio send error:', err);
-    res.status(500).json({ message: 'Failed to send verification code.' });
+    console.error('Twilio send verification error:', err.message);
+    res.status(500).json({ message: 'Failed to send verification code' });
   }
 });
 
-// Verify submitted code via Twilio
+// Verify Code and Generate Token
 router.post('/verify-code', async (req, res) => {
   const { phone, code } = req.body;
 
@@ -75,90 +49,65 @@ router.post('/verify-code', async (req, res) => {
     return res.status(400).json({ message: 'Phone and verification code are required' });
   }
 
-  const normalizedPhone = normalizePhone(phone);
+  const formattedPhone = phone.replace(/\D/g, '');
+  const internationalPhone = formattedPhone.startsWith('1')
+    ? `+${formattedPhone}`
+    : `+1${formattedPhone}`;
 
   try {
     const verificationCheck = await client.verify.v2
-      .services(verifySid)
+      .services(process.env.TWILIO_VERIFY_SERVICE_ID)
       .verificationChecks.create({
-        to: normalizedPhone,
+        to: internationalPhone,
         code
       });
 
     if (verificationCheck.status === 'approved') {
       const user = await User.findOneAndUpdate(
-        { phone: normalizedPhone },
+        { phone },
         { phone_verified: true },
         { new: true }
       );
 
-      req.session.userId = user._id;
-      
-      req.session.save((err) => {
-        if (err) {
-          console.error("Session save error during verification:", err);
-          return res.status(500).json({ message: 'Session save failed' });
-        }
-        console.log('Session saved and user verified:', user);
-        res.status(200).json({ message: 'Phone verified successfully', user });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const token = generateToken(user._id);
+      return res.status(200).json({
+        message: 'Phone verified successfully',
+        token
       });
     } else {
       return res.status(400).json({ message: 'Invalid or expired verification code' });
     }
-    
   } catch (err) {
     console.error('Twilio verify check error:', err.message);
     return res.status(500).json({ message: 'Verification failed. Try again.' });
   }
 });
 
-// Login route
+// Login Route
 router.post('/login', async (req, res) => {
   try {
     const { phone, password } = req.body;
 
-    if (!phone || !password) {
-      return res.status(400).json({ message: 'Phone and password are required.' });
-    }
+    const user = await User.findOne({ phone });
+    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
 
-    const normalizedPhone = normalizePhone(phone);
-    console.log('Normalized phone:', normalizedPhone); // Debugging
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-    const user = await User.findOne({ phone: normalizedPhone });
-    if (!user) {
-      console.log('User not found for phone:', normalizedPhone); // Debugging
-      return res.status(404).json({ message: 'User not found.' });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      console.log('Password mismatch for user:', user._id); // Debugging
-      return res.status(401).json({ message: 'Invalid credentials.' });
-    }
-
-    req.session.userId = user._id;
-    console.log('User logged in successfully:', user._id); // Debugging
-    res.status(200).json({ message: 'Login successful.' });
-
+    const token = generateToken(user._id);
+    res.status(200).json({ message: 'Login successful', token });
   } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ message: 'Server error during login.', error: err.message });
+    console.error("Login failed:", err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
-// Logout route
-router.post('/logout', (req, res) => {
-  req.session.destroy(err => {
-    if (err) {
-      console.error('Logout error:', err);
-      return res.status(500).json({ message: 'Failed to logout.' });
-    }
-    res.clearCookie('connect.sid', { path: '/' });
-    res.status(200).json({ message: 'Logged out successfully.' });
-  });
-});
-
 module.exports = router;
+
 
 
 
