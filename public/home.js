@@ -65,11 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         let data;
+        let clone = res.clone();
           try {
-            const clone = res.clone(); //make a copy
-            data = await res.json();
+            data = await clone.json();
           } catch (parseErr) {
-            const fallbackText = await res.text(); //safe to read now
+            const fallbackText = await clone.text(); //safe to read now
             console.error("Non-JSON response from /register:", fallbackText);
             messageEl.textContent = "Unexpected server response.";
             return;
