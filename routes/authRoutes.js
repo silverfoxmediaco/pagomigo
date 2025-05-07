@@ -13,6 +13,42 @@ const generateToken = (userId) => {
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '7d' });
 };
 
+// Register Route (JWT version with auto SMS)
+router.post('/register', async (req, res) => {
+  try {
+    const { name, phone, username, password } = req.body;
+    if (!name || !phone || !username || !password) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const existingUser = await User.findOne({ phone });
+    if (existingUser) return res.status(409).json({ message: 'User already exists' });
+
+    const user = new User({ name, phone, username, password });
+    await user.save();
+
+    // Format phone and send verification code via Twilio
+    const formattedPhone = phone.replace(/\D/g, '');
+    const internationalPhone = formattedPhone.startsWith('1')
+      ? `+${formattedPhone}`
+      : `+1${formattedPhone}`;
+
+    await client.verify.v2
+      .services(process.env.TWILIO_VERIFY_SERVICE_ID)
+      .verifications.create({
+        to: internationalPhone,
+        channel: 'sms'
+      });
+
+    res.status(201).json({ message: 'Account created! Verification code sent.' });
+
+  } catch (err) {
+    console.error("Registration failed:", err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
+
 // Send Verification Code
 router.post('/send-verification', async (req, res) => {
   const { phone } = req.body;
@@ -156,7 +192,7 @@ console.log("Using Twilio Verify SID:", process.env.TWILIO_VERIFY_SERVICE_ID);
 
 });
 
-// Register Route
+//Register Route
 router.post('/register', async (req, res) => {
   try {
     const { name, phone, username, password } = req.body;
