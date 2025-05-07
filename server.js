@@ -2,84 +2,40 @@
 
 require('dotenv').config();
 const express = require('express');
-
 const path = require('path');
 const cors = require('cors');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
+
 const authRoutes = require('./routes/authRoutes');
 const kycRoutes = require('./routes/kycRoutes');
 const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const requestRoutes = require('./routes/requestRoutes');
+
 const isProd = process.env.NODE_ENV === 'production';
-const isDev = process.env.NODE_ENV === 'development';
 
 const app = express();
 
+// CORS setup
 app.use(cors({
-  origin: 'https://www.pagomigo.com',
+  origin: isProd
+    ? ['https://www.pagomigo.com', 'https://pagomigo.com']
+    : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Authorization'],
   credentials: true
 }));
+console.log('CORS enabled');
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'someSecret',
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URI,
-    collectionName: 'sessions',
-    ttl: 14 * 24 * 60 * 60, // 14 days
-  }),
-
-    cookie: {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'None' : 'Lax',
-    domain: isProd ? '.pagomigo.com' : undefined,
-    maxAge: 24 * 60 * 60 * 1000 // 1 day
-  }
-}));
-
-app.get('/test-cookie', (req, res) => {
-  res.cookie('connect.sid', 'test-session-value', {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    domain: isProd ? '.pagomigo.com' : undefined,
-    maxAge: 60 * 60 * 1000 // 1 hour
-  });
-
-  res.send('Test cookie has been set.');
-});
-
-
+// Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, next) => {
-  if (req.method === 'OPTIONS') return next();
-
-  const isApi = req.path.startsWith('/api/');
-  const isWWW = req.hostname === 'www.pagomigo.com';
-  const isMainDomain = req.hostname === 'pagomigo.com';
-
-  // Block API usage from non-www domains
-  if (isMainDomain && isApi) {
-    return res.status(403).send('API access must go through www.pagomigo.com');
-  }
-
-  // Redirect HTML/page requests to www
-  if (isMainDomain && !isApi) {
-    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
-  }
-
-  next();
-});
-
+// Catch URI errors
 app.use((req, res, next) => {
   try {
     decodeURIComponent(req.path);
@@ -90,18 +46,46 @@ app.use((req, res, next) => {
   }
 });
 
-//Routes
+// Ignore certain static/resource routes
+const ignoredPaths = [
+  '/favicon.ico', '/robots.txt', '/sitemap.xml', '/public/', '/static/', '/assets/',
+  '/images/', '/css/', '/js/', '/fonts/', '/videos/', '/audio/',
+  '/docs/', '/uploads/', '/downloads/', '/api/', '/api/v1/', '/api/v2/', '/api/v3/'
+];
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') return next();
+  if (ignoredPaths.some(prefix => req.path.startsWith(prefix))) {
+    return res.status(200).send('OK');
+  }
+
+  // Redirect all non-www subdomains to www
+  const disallowedDomains = [
+    'pagomigo.com',
+    'test.pagomigo.com',
+    'api.pagomigo.com',
+    'test.api.pagomigo.com',
+    'localhost'
+  ];
+  if (disallowedDomains.includes(req.hostname)) {
+    return res.redirect(301, `https://www.pagomigo.com${req.originalUrl}`);
+  }
+
+  next();
+});
+
+// API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/kyc', kycRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/requests', requestRoutes);
 
-// Basic test route
+// Health check
 app.get('/api/ping', (req, res) => {
   res.json({ message: 'Pagomigo API is alive!' });
 });
 
+// Fallback to frontend for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -116,4 +100,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-// Export the app for testing
