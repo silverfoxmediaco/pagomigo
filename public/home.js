@@ -64,14 +64,13 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({ name, username, phone, password })
         });
 
-        const resClone = res.clone();
+        const text = await res.text(); // read once safely
         let data;
 
         try {
-          data = await res.json();
+          data = JSON.parse(text); // parse manually
         } catch (parseErr) {
-          const fallbackText = await resClone.text();
-          console.error("Non-JSON response from /register:", fallbackText);
+          console.error("Non-JSON response from /register:", text);
           messageEl.textContent = "Unexpected server response.";
           return;
         }
