@@ -52,9 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const name = document.getElementById("name").value.trim();
-      const username = document.getElementById("username").value.trim();
-      const phone = document.getElementById("phone").value.trim();
+      const name = document.getElementById("name").value.();
+      const username = document.getElementById("username").value();
+      const phone = document.getElementById("phone").value.();
       const password = document.getElementById("signup-password").value;
 
       try {
@@ -69,8 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const clone = res.clone(); //make a copy
             data = await res.json();
           } catch (parseErr) {
-            const text = await res.text(); //safe to read now
-            console.error("Non-JSON response from /register:", text);
+            const fallbackText = await res.text(); //safe to read now
+            console.error("Non-JSON response from /register:", fallbackText);
             messageEl.textContent = "Unexpected server response.";
             return;
           }
