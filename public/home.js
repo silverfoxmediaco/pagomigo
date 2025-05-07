@@ -1,23 +1,20 @@
-// join now modal
+// home.js — Join Now Modal + Signup Logic
 
-// Burger menu + animation logic
 document.addEventListener("DOMContentLoaded", () => {
+  // Burger menu
   const hamburger = document.getElementById("hamburger");
   const slideoutMenu = document.getElementById("slideoutMenu");
   const closeBtn = document.getElementById("closeMenu");
 
   if (hamburger) {
-    hamburger.addEventListener("click", () => {
-      slideoutMenu.classList.add("open");
-    });
+    hamburger.addEventListener("click", () => slideoutMenu.classList.add("open"));
   }
 
   if (closeBtn) {
-    closeBtn.addEventListener("click", () => {
-      slideoutMenu.classList.remove("open");
-    });
+    closeBtn.addEventListener("click", () => slideoutMenu.classList.remove("open"));
   }
 
+  // Animate elements on scroll
   const animatedElements = document.querySelectorAll(".debit-card-text, .debit-card-image");
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -27,26 +24,22 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }, { threshold: 0.1 });
-
   animatedElements.forEach(el => observer.observe(el));
 
-  // Join Now Modal Logic
+  // Signup modal
   const modal = document.getElementById("signup-modal");
   const closeSignupBtn = document.getElementById("close-signup");
   const joinNowBtn = document.getElementById("signupbtn");
 
   if (joinNowBtn) {
-    joinNowBtn.addEventListener("click", () => {
-      modal.classList.add("active");
-    });
+    joinNowBtn.addEventListener("click", () => modal.classList.add("active"));
   }
 
   if (closeSignupBtn) {
-    closeSignupBtn.addEventListener("click", () => {
-      modal.classList.remove("active");
-    });
+    closeSignupBtn.addEventListener("click", () => modal.classList.remove("active"));
   }
 
+  // Signup form
   const signupForm = document.getElementById("signup-form");
   const messageEl = document.getElementById("signup-message");
 
@@ -59,9 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const name = document.getElementById("name").value;
-      const username = document.getElementById("username").value;
-      const phone = document.getElementById("phone").value;
+      const name = document.getElementById("name").value.trim();
+      const username = document.getElementById("username").value.trim();
+      const phone = document.getElementById("phone").value.trim();
       const password = document.getElementById("signup-password").value;
 
       try {
@@ -71,24 +64,30 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({ name, username, phone, password })
         });
 
-        const data = await res.json();
-        messageEl.textContent = data.message || "Account created!";
-
-        if (res.ok) {
-          localStorage.setItem("phone", phone);
-          signupForm.reset();
-          setTimeout(() => modal.classList.remove("active"), 2000);
-
-          // Trigger SMS verification
-          await fetch("/api/auth/send-verification", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ phone })
-          });
-
-          // Redirect after verification request
-          window.location.href = "/verify.html";
+        let data;
+        try {
+          data = await res.json();
+        } catch (parseErr) {
+          const text = await res.text();
+          console.error("Non-JSON response from /register:", text);
+          messageEl.textContent = "Unexpected server response.";
+          return;
         }
+
+        if (!res.ok) {
+          messageEl.textContent = data.message || "Signup failed. Try again.";
+          return;
+        }
+
+        // On success
+        messageEl.textContent = data.message || "Account created!";
+        localStorage.setItem("phone", phone);
+        signupForm.reset();
+
+        setTimeout(() => {
+          modal.classList.remove("active");
+          window.location.href = "/verify.html";
+        }, 1500);
       } catch (err) {
         console.error("Signup error:", err);
         messageEl.textContent = "Signup failed. Try again.";
